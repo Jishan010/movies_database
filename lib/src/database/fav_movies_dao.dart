@@ -12,8 +12,20 @@ abstract class FavMoviesDao {
   @Query('SELECT * FROM FavMovies order by id desc')
   Stream<List<FavMovies>> fetchStreamData();
 
+  //find single moview by id
+  @Query('SELECT * FROM FavMovies WHERE id = :id')
+  Future<FavMovies?> findMovieById(int id);
+
+  //is fav movie
+  @Query('SELECT * FROM FavMovies where isFav = 1')
+  Future<List<FavMovies>> findAllFavMoviesList();
+
   @insert
   Future<void> insertFavMovies(FavMovies favMovies);
+
+  //update fav movie
+  @update
+  Future<void> updateFavMovies(FavMovies favMovies);
 
   @insert
   Future<List<int>> insertAllFavMovies(List<FavMovies> todo);

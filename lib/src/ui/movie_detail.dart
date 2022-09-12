@@ -12,14 +12,14 @@ class MovieDetail extends StatefulWidget {
   final String? voteAverage;
   final int? movieId;
 
-  MovieDetail({
+  const MovieDetail({Key? key,
     this.title,
     this.posterUrl,
     this.description,
     this.releaseDate,
     this.voteAverage,
     this.movieId,
-  });
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
