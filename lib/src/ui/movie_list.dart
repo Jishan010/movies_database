@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/database/fav_movies.dart';
-import '../database/app_database.dart';
 import '../database/fav_movies_dao.dart';
 import '../models/item_model.dart';
 import '../blocs/movies_bloc.dart';
@@ -8,7 +7,9 @@ import 'movie_detail.dart';
 import '../blocs/movie_detail_bloc_provider.dart';
 
 class MovieList extends StatefulWidget {
-  const MovieList({Key? key}) : super(key: key);
+  final FavMoviesDao favMoviesDao;
+
+  const MovieList(this.favMoviesDao, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -17,14 +18,9 @@ class MovieList extends StatefulWidget {
 }
 
 class MovieListState extends State<MovieList> {
-  bool isFav = false;
-
   //function to check if movie is fav
   Future<FavMovies> isFavMovie(int? id) async {
-    final database =
-        await $FloorAppDatabase.databaseBuilder('movies.db').build();
-    final favMoviesDao = database.favMoviesDao;
-    final favMovies = await favMoviesDao.findMovieById(id!);
+    final favMovies = await widget.favMoviesDao.findMovieById(id!);
     if (favMovies != null) {
       return favMovies;
     } else {
@@ -97,8 +93,7 @@ class MovieListState extends State<MovieList> {
                                 ),
                                 onPressed: () {
                                   updateFaveMovies(snapshot.data, index, 0);
-                                  setState(() {
-                                  });
+                                  setState(() {});
                                 });
                           } else {
                             return IconButton(
@@ -108,8 +103,7 @@ class MovieListState extends State<MovieList> {
                                 ),
                                 onPressed: () {
                                   updateFaveMovies(snapshot.data, index, 1);
-                                  setState(() {
-                                  });
+                                  setState(() {});
                                 });
                           }
                         })
@@ -127,43 +121,23 @@ class MovieListState extends State<MovieList> {
         });
   }
 
-
   void updateFaveMovies(FavMovies? movies, int index, int isFav) async {
-    String? posterPath =
-    movies?.posterPath.toString();
+    String? posterPath = movies?.posterPath.toString();
     int? id = movies?.id;
     String? title = movies?.title;
-    String? releaseDate =
-        movies?.releaseDate;
-    String? originalLanguage =
-        movies?.originalLanguage;
+    String? releaseDate = movies?.releaseDate;
+    String? originalLanguage = movies?.originalLanguage;
     FavMovies favMovies = FavMovies(
-        id!,
-        title!,
-        posterPath!,
-        releaseDate!,
-        originalLanguage!,
-        isFav);
-    final database = $FloorAppDatabase
-        .databaseBuilder('movies.db')
-        .build();
-    database.then((onValue) {
-      //check if movie is already in database
-      onValue.favMoviesDao
-          .findMovieById(id)
-          .then((value) {
-        if (value == null) {
-          onValue.favMoviesDao
-              .insertFavMovies(favMovies);
-          print("Favorite added $title");
-        } else {
-          onValue.favMoviesDao
-              .deleteFavMovies(favMovies.id);
-          print("Favorite deleted $title");
-        }
-      });
+        id!, title!, posterPath!, releaseDate!, originalLanguage!, isFav);
+    widget.favMoviesDao.findMovieById(id).then((value) {
+      if (value != null) {
+        print("Favorite deleted $id");
+        widget.favMoviesDao.deleteFavMovies(favMovies.id);
+      } else {
+        print("Favorite added $id");
+        widget.favMoviesDao.insertFavMovies(favMovies);
+      }
     });
-
   }
 
   openDetailPage(ItemModel? data, int index) {
