@@ -93,52 +93,52 @@ class MovieDetailState extends State<MovieDetail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(margin: EdgeInsets.only(top: 5.0)),
+                Container(margin: const EdgeInsets.only(top: 5.0)),
                 Text(
                   title ?? "",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 25.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Container(margin: EdgeInsets.only(top: 8.0, bottom: 8.0)),
+                Container(margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
                 Row(
                   children: <Widget>[
-                    Icon(
+                    const Icon(
                       Icons.favorite,
                       color: Colors.red,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 1.0, right: 1.0),
+                      margin: const EdgeInsets.only(left: 1.0, right: 1.0),
                     ),
                     Text(
                       voteAverage ?? "",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18.0,
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                      margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                     ),
                     Text(
                       releaseDate,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18.0,
                       ),
                     ),
                   ],
                 ),
-                Container(margin: EdgeInsets.only(top: 8.0, bottom: 8.0)),
+                Container(margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
                 Text(description),
-                Container(margin: EdgeInsets.only(top: 8.0, bottom: 8.0)),
-                Text(
+                Container(margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
+                const Text(
                   "Trailer",
                   style: TextStyle(
                     fontSize: 25.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Container(margin: EdgeInsets.only(top: 8.0, bottom: 8.0)),
+                Container(margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
                 StreamBuilder(
                   stream: bloc.movieTrailers,
                   builder:
@@ -154,12 +154,12 @@ class MovieDetailState extends State<MovieDetail> {
                             else
                               return noTrailer(itemSnapShot.data);
                           } else {
-                            return Center(child: CircularProgressIndicator());
+                            return const Center(child: CircularProgressIndicator());
                           }
                         },
                       );
                     } else {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
                   },
                 ),
@@ -174,7 +174,7 @@ class MovieDetailState extends State<MovieDetail> {
   Widget noTrailer(TrailerModel? data) {
     return Center(
       child: Container(
-        child: Text("No trailer available"),
+        child: const Text("No trailer available"),
       ),
     );
   }
@@ -201,10 +201,10 @@ class MovieDetailState extends State<MovieDetail> {
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.all(5.0),
+            margin: const EdgeInsets.all(5.0),
             height: 100.0,
             color: Colors.grey,
-            child: Center(child: Icon(Icons.play_circle_filled)),
+            child: const Center(child: Icon(Icons.play_circle_filled)),
           ),
           Text(
             data?.results[index].name ?? "",
