@@ -66,10 +66,15 @@ class MovieListState extends State<MovieList> {
       child: TextField(
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          hintText: 'Search for movies',
+          hintText: 'Eg. The Dark Knight',
+          prefixIcon: Icon(Icons.search),
         ),
         onSubmitted: (value) {
-          bloc.searchMoviesFromQuery(value);
+          if (value.isNotEmpty) {
+            bloc.searchMoviesFromQuery(value);
+          } else {
+            bloc.fetchAllMovies();
+          }
         },
       ),
     );
@@ -82,8 +87,8 @@ class MovieListState extends State<MovieList> {
         Expanded(
           child: GridView.builder(
               itemCount: snapshot.data?.results.length,
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2),
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   margin: const EdgeInsets.all(5.0),
@@ -101,8 +106,9 @@ class MovieListState extends State<MovieList> {
                             onTap: () => openDetailPage(snapshot.data, index),
                           )),
                           StreamBuilder<FavMovies>(
-                              stream: isFavMovie(snapshot.data?.results[index].id)
-                                  .asStream(),
+                              stream:
+                                  isFavMovie(snapshot.data?.results[index].id)
+                                      .asStream(),
                               builder: (context, snapshot) {
                                 if (snapshot.data?.isFav == 1) {
                                   return IconButton(
@@ -111,7 +117,8 @@ class MovieListState extends State<MovieList> {
                                         color: Colors.red,
                                       ),
                                       onPressed: () {
-                                        updateFaveMovies(snapshot.data, index, 0);
+                                        updateFaveMovies(
+                                            snapshot.data, index, 0);
                                         setState(() {});
                                       });
                                 } else {
@@ -121,7 +128,8 @@ class MovieListState extends State<MovieList> {
                                         color: Colors.white,
                                       ),
                                       onPressed: () {
-                                        updateFaveMovies(snapshot.data, index, 1);
+                                        updateFaveMovies(
+                                            snapshot.data, index, 1);
                                         setState(() {});
                                       });
                                 }
