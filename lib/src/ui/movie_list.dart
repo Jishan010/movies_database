@@ -90,59 +90,64 @@ class MovieListState extends State<MovieList> {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2),
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  margin: const EdgeInsets.all(5.0),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Stack(children: [
-                          GridTile(
-                              child: InkResponse(
-                            enableFeedback: true,
-                            child: Image.network(
-                              'https://image.tmdb.org/t/p/w185${snapshot.data?.results[index].posterPath}',
-                              fit: BoxFit.fill,
+                return Card(
+                  child: Container(
+                    margin: const EdgeInsets.all(5.0),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Stack(children: [
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: GridTile(
+                                  child: InkResponse(
+                                enableFeedback: true,
+                                child: Image.network(
+                                  'https://image.tmdb.org/t/p/w185${snapshot.data?.results[index].posterPath}',
+                                  fit: BoxFit.cover,
+                                ),
+                                onTap: () => openDetailPage(snapshot.data, index),
+                              )),
                             ),
-                            onTap: () => openDetailPage(snapshot.data, index),
-                          )),
-                          StreamBuilder<FavMovies>(
-                              stream:
-                                  isFavMovie(snapshot.data?.results[index].id)
-                                      .asStream(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data?.isFav == 1) {
-                                  return IconButton(
-                                      icon: const Icon(
-                                        Icons.favorite,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () {
-                                        updateFaveMovies(
-                                            snapshot.data, index, 0);
-                                        setState(() {});
-                                      });
-                                } else {
-                                  return IconButton(
-                                      icon: const Icon(
-                                        Icons.favorite_border,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        updateFaveMovies(
-                                            snapshot.data, index, 1);
-                                        setState(() {});
-                                      });
-                                }
-                              })
-                        ]),
-                      ),
-                      Text(
-                        snapshot.data?.results[index].title ?? '',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                            StreamBuilder<FavMovies>(
+                                stream:
+                                    isFavMovie(snapshot.data?.results[index].id)
+                                        .asStream(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.data?.isFav == 1) {
+                                    return IconButton(
+                                        icon: const Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        ),
+                                        onPressed: () {
+                                          updateFaveMovies(
+                                              snapshot.data, index, 0);
+                                          setState(() {});
+                                        });
+                                  } else {
+                                    return IconButton(
+                                        icon: const Icon(
+                                          Icons.favorite_border,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          updateFaveMovies(
+                                              snapshot.data, index, 1);
+                                          setState(() {});
+                                        });
+                                  }
+                                })
+                          ]),
                         ),
-                      ),
-                    ],
+                        Text(
+                          snapshot.data?.results[index].title ?? '',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }),

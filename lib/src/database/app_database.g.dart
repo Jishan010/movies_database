@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `FavMovies` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `posterPath` TEXT NOT NULL, `releaseDate` TEXT NOT NULL,`originalLanguage` TEXT NOT NULL,`isFav` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `FavMovies` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `posterPath` TEXT NOT NULL, `releaseDate` TEXT NOT NULL, `originalLanguage` TEXT NOT NULL, `isFav` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -108,7 +108,20 @@ class _$FavMoviesDao extends FavMoviesDao {
                   'posterPath': item.posterPath,
                   'releaseDate': item.releaseDate,
                   'originalLanguage': item.originalLanguage,
-                  "isFav": item.isFav
+                  'isFav': item.isFav
+                },
+            changeListener),
+        _favMoviesUpdateAdapter = UpdateAdapter(
+            database,
+            'FavMovies',
+            ['id'],
+            (FavMovies item) => <String, Object?>{
+                  'id': item.id,
+                  'title': item.title,
+                  'posterPath': item.posterPath,
+                  'releaseDate': item.releaseDate,
+                  'originalLanguage': item.originalLanguage,
+                  'isFav': item.isFav
                 },
             changeListener),
         _favMoviesDeletionAdapter = DeletionAdapter(
@@ -132,6 +145,8 @@ class _$FavMoviesDao extends FavMoviesDao {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<FavMovies> _favMoviesInsertionAdapter;
+
+  final UpdateAdapter<FavMovies> _favMoviesUpdateAdapter;
 
   final DeletionAdapter<FavMovies> _favMoviesDeletionAdapter;
 
@@ -176,6 +191,31 @@ class _$FavMoviesDao extends FavMoviesDao {
   }
 
   @override
+  Future<FavMovies?> findMovieById(int id) async {
+    return _queryAdapter.query('SELECT * FROM FavMovies WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => FavMovies(
+            row['id'] as int,
+            row['title'] as String,
+            row['posterPath'] as String,
+            row['releaseDate'] as String,
+            row['originalLanguage'] as String,
+            row['isFav'] as int),
+        arguments: [id]);
+  }
+
+  @override
+  Future<List<FavMovies>> findAllFavMoviesList() async {
+    return _queryAdapter.queryList('SELECT * FROM FavMovies where isFav = 1',
+        mapper: (Map<String, Object?> row) => FavMovies(
+            row['id'] as int,
+            row['title'] as String,
+            row['posterPath'] as String,
+            row['releaseDate'] as String,
+            row['originalLanguage'] as String,
+            row['isFav'] as int));
+  }
+
+  @override
   Future<void> deleteFavMovies(int id) async {
     await _queryAdapter
         .queryNoReturn('delete from FavMovies where id = ?1', arguments: [id]);
@@ -194,38 +234,12 @@ class _$FavMoviesDao extends FavMoviesDao {
   }
 
   @override
+  Future<void> updateFavMovies(FavMovies favMovies) async {
+    await _favMoviesUpdateAdapter.update(favMovies, OnConflictStrategy.abort);
+  }
+
+  @override
   Future<int> deleteAll(List<FavMovies> list) {
     return _favMoviesDeletionAdapter.deleteListAndReturnChangedRows(list);
-  }
-
-  @override
-  Future<List<FavMovies>> findAllFavMoviesList() {
-    return _queryAdapter.queryList('SELECT * FROM FavMovies',
-        mapper: (Map<String, Object?> row) => FavMovies(
-            row['id'] as int,
-            row['title'] as String,
-            row['posterPath'] as String,
-            row['releaseDate'] as String,
-            row['originalLanguage'] as String,
-            row['isFav'] as int));
-  }
-
-  @override
-  Future<FavMovies?> findMovieById(int id) {
-    return _queryAdapter.query('Select * from FavMovies where id = ?1',
-        arguments: [id],
-        mapper: (Map<String, Object?> row) => FavMovies(
-            row['id'] as int,
-            row['title'] as String,
-            row['posterPath'] as String,
-            row['releaseDate'] as String,
-            row['originalLanguage'] as String,
-            row['isFav'] as int));
-  }
-
-  @override
-  Future<void> updateFavMovies(FavMovies favMovies) {
-    return _favMoviesInsertionAdapter.insert(
-        favMovies, OnConflictStrategy.replace);
   }
 }
