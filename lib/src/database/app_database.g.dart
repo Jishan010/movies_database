@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `FavMovies` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `posterPath` TEXT NOT NULL, `releaseDate` TEXT NOT NULL, `originalLanguage` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `FavMovies` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `posterPath` TEXT NOT NULL, `releaseDate` TEXT NOT NULL,`originalLanguage` TEXT NOT NULL,`isFav` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -107,7 +107,8 @@ class _$FavMoviesDao extends FavMoviesDao {
                   'title': item.title,
                   'posterPath': item.posterPath,
                   'releaseDate': item.releaseDate,
-                  'originalLanguage': item.originalLanguage
+                  'originalLanguage': item.originalLanguage,
+                  "isFav": item.isFav
                 },
             changeListener),
         _favMoviesDeletionAdapter = DeletionAdapter(
@@ -119,7 +120,8 @@ class _$FavMoviesDao extends FavMoviesDao {
                   'title': item.title,
                   'posterPath': item.posterPath,
                   'releaseDate': item.releaseDate,
-                  'originalLanguage': item.originalLanguage
+                  'originalLanguage': item.originalLanguage,
+                  'isFav': item.isFav
                 },
             changeListener);
 
@@ -141,7 +143,8 @@ class _$FavMoviesDao extends FavMoviesDao {
             row['title'] as String,
             row['posterPath'] as String,
             row['releaseDate'] as String,
-            row['originalLanguage'] as String));
+            row['originalLanguage'] as String,
+            row['isFav'] as int));
   }
 
   @override
@@ -153,7 +156,8 @@ class _$FavMoviesDao extends FavMoviesDao {
             row['title'] as String,
             row['posterPath'] as String,
             row['releaseDate'] as String,
-            row['originalLanguage'] as String));
+            row['originalLanguage'] as String,
+            row['isFav'] as int));
   }
 
   @override
@@ -165,7 +169,8 @@ class _$FavMoviesDao extends FavMoviesDao {
             row['title'] as String,
             row['posterPath'] as String,
             row['releaseDate'] as String,
-            row['originalLanguage'] as String),
+            row['originalLanguage'] as String,
+            row['isFav'] as int),
         queryableName: 'FavMovies',
         isView: false);
   }
@@ -191,5 +196,36 @@ class _$FavMoviesDao extends FavMoviesDao {
   @override
   Future<int> deleteAll(List<FavMovies> list) {
     return _favMoviesDeletionAdapter.deleteListAndReturnChangedRows(list);
+  }
+
+  @override
+  Future<List<FavMovies>> findAllFavMoviesList() {
+    return _queryAdapter.queryList('SELECT * FROM FavMovies',
+        mapper: (Map<String, Object?> row) => FavMovies(
+            row['id'] as int,
+            row['title'] as String,
+            row['posterPath'] as String,
+            row['releaseDate'] as String,
+            row['originalLanguage'] as String,
+            row['isFav'] as int));
+  }
+
+  @override
+  Future<FavMovies?> findMovieById(int id) {
+    return _queryAdapter.query('Select * from FavMovies where id = ?1',
+        arguments: [id],
+        mapper: (Map<String, Object?> row) => FavMovies(
+            row['id'] as int,
+            row['title'] as String,
+            row['posterPath'] as String,
+            row['releaseDate'] as String,
+            row['originalLanguage'] as String,
+            row['isFav'] as int));
+  }
+
+  @override
+  Future<void> updateFavMovies(FavMovies favMovies) {
+    return _favMoviesInsertionAdapter.insert(
+        favMovies, OnConflictStrategy.replace);
   }
 }

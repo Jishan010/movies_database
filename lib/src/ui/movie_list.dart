@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/database/fav_movies.dart';
-import '../database/app_database.dart';
+import '../database/fav_movies_dao.dart';
 import '../models/item_model.dart';
 import '../blocs/movies_bloc.dart';
 import 'movie_detail.dart';
 import '../blocs/movie_detail_bloc_provider.dart';
 
 class MovieList extends StatefulWidget {
-  const MovieList({Key? key}) : super(key: key);
+  final FavMoviesDao favMoviesDao;
+
+  const MovieList(this.favMoviesDao, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -16,6 +18,16 @@ class MovieList extends StatefulWidget {
 }
 
 class MovieListState extends State<MovieList> {
+  //function to check if movie is fav
+  Future<FavMovies> isFavMovie(int? id) async {
+    final favMovies = await widget.favMoviesDao.findMovieById(id!);
+    if (favMovies != null) {
+      return favMovies;
+    } else {
+      return FavMovies(id, '', '', '', '', 0);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,40 +66,78 @@ class MovieListState extends State<MovieList> {
         gridDelegate:
             const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemBuilder: (BuildContext context, int index) {
-          return GridTile(
-            footer: TextButton(
-              onPressed: () {
-                print("Favorite added $index");
-
-                String? posterPath = snapshot.data?.results[index].posterPath;
-                int? id = snapshot.data?.results[index].id;
-                String? title = snapshot.data?.results[index].title;
-                String? releaseDate = snapshot.data?.results[index].releaseDate;
-                String? originalLanguage =
-                    snapshot.data?.results[index].originalLanguage;
-                FavMovies favMovies = FavMovies(
-                    id!, title!, posterPath!, releaseDate!, originalLanguage!);
-
-                final database =
-                    $FloorAppDatabase.databaseBuilder('movies.db').build();
-                database.then((onValue) {
-                  // find the dao here
-                  onValue.favMoviesDao.insertFavMovies(favMovies);
-                  print("Favorite added $title");
-                });
-              },
-              child: Text("Add to fevorite"),
-            ),
-            child: InkResponse(
-              enableFeedback: true,
-              child: Image.network(
-                'https://image.tmdb.org/t/p/w185${snapshot.data?.results[index].posterPath}',
-                fit: BoxFit.cover,
-              ),
-              onTap: () => openDetailPage(snapshot.data, index),
+          return Container(
+            margin: const EdgeInsets.all(5.0),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Stack(children: [
+                    GridTile(
+                        child: InkResponse(
+                      enableFeedback: true,
+                      child: Image.network(
+                        'https://image.tmdb.org/t/p/w185${snapshot.data?.results[index].posterPath}',
+                        fit: BoxFit.fill,
+                      ),
+                      onTap: () => openDetailPage(snapshot.data, index),
+                    )),
+                    StreamBuilder<FavMovies>(
+                        stream: isFavMovie(snapshot.data?.results[index].id)
+                            .asStream(),
+                        builder: (context, snapshot) {
+                          if (snapshot.data?.isFav == 1) {
+                            return IconButton(
+                                icon: const Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  updateFaveMovies(snapshot.data, index, 0);
+                                  setState(() {});
+                                });
+                          } else {
+                            return IconButton(
+                                icon: const Icon(
+                                  Icons.favorite_border,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  updateFaveMovies(snapshot.data, index, 1);
+                                  setState(() {});
+                                });
+                          }
+                        })
+                  ]),
+                ),
+                Text(
+                  snapshot.data?.results[index].title ?? '',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           );
         });
+  }
+
+  void updateFaveMovies(FavMovies? movies, int index, int isFav) async {
+    String? posterPath = movies?.posterPath.toString();
+    int? id = movies?.id;
+    String? title = movies?.title;
+    String? releaseDate = movies?.releaseDate;
+    String? originalLanguage = movies?.originalLanguage;
+    FavMovies favMovies = FavMovies(
+        id!, title!, posterPath!, releaseDate!, originalLanguage!, isFav);
+    widget.favMoviesDao.findMovieById(id).then((value) {
+      if (value != null) {
+        print("Favorite deleted $id");
+        widget.favMoviesDao.deleteFavMovies(favMovies.id);
+      } else {
+        print("Favorite added $id");
+        widget.favMoviesDao.insertFavMovies(favMovies);
+      }
+    });
   }
 
   openDetailPage(ItemModel? data, int index) {

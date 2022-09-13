@@ -8,6 +8,7 @@ class MovieApiProvider {
   Client client = Client();
   final _apiKey = 'a9d3771ee8051284ae7c6519283c76a2';
   final _baseUrl = "http://api.themoviedb.org/3/movie";
+  final _baseUrlForSearch = "https://api.themoviedb.org/3/search";
 
   Future<ItemModel> fetchMovieList() async {
     print("entered");
@@ -33,4 +34,17 @@ class MovieApiProvider {
       throw Exception('Failed to load trailers');
     }
   }
+  //https://api.themoviedb.org/3/search/movie?api_key={api_key}&query=Jack+Reacher
+  fetchMoviesBySearcgQuery(String query) async {
+    final response = await client.get(Uri.parse("$_baseUrl/movie?api_key=$_apiKey&query=$query"));
+    if (response.statusCode == 200) {
+      return ItemModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load trailers');
+    }
+  }
+
+
+
+
 }

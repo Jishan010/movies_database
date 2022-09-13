@@ -81,7 +81,7 @@ class _Result {
 
   String? get title => _title;
 
-  double? get voteAverage => _voteAverage;
+  num? get voteAverage => _voteAverage;
 
   bool? get video => _video;
 
