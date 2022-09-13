@@ -44,7 +44,7 @@ class MovieListState extends State<MovieList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Popular Movies'),
+        title: const Text('Popular Movies'),
       ),
       body: StreamBuilder(
         stream: bloc.allMovies,
@@ -54,71 +54,93 @@ class MovieListState extends State<MovieList> {
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
+    );
+  }
+
+  Widget searchField() {
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      child: TextField(
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: 'Search for movies',
+        ),
+        onSubmitted: (value) {
+          bloc.searchMoviesFromQuery(value);
         },
       ),
     );
   }
 
   Widget buildList(AsyncSnapshot<ItemModel> snapshot) {
-    return GridView.builder(
-        itemCount: snapshot.data?.results.length,
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            margin: const EdgeInsets.all(5.0),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Stack(children: [
-                    GridTile(
-                        child: InkResponse(
-                      enableFeedback: true,
-                      child: Image.network(
-                        'https://image.tmdb.org/t/p/w185${snapshot.data?.results[index].posterPath}',
-                        fit: BoxFit.fill,
+    return Column(
+      children: [
+        searchField(),
+        Expanded(
+          child: GridView.builder(
+              itemCount: snapshot.data?.results.length,
+              gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  margin: const EdgeInsets.all(5.0),
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: Stack(children: [
+                          GridTile(
+                              child: InkResponse(
+                            enableFeedback: true,
+                            child: Image.network(
+                              'https://image.tmdb.org/t/p/w185${snapshot.data?.results[index].posterPath}',
+                              fit: BoxFit.fill,
+                            ),
+                            onTap: () => openDetailPage(snapshot.data, index),
+                          )),
+                          StreamBuilder<FavMovies>(
+                              stream: isFavMovie(snapshot.data?.results[index].id)
+                                  .asStream(),
+                              builder: (context, snapshot) {
+                                if (snapshot.data?.isFav == 1) {
+                                  return IconButton(
+                                      icon: const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        updateFaveMovies(snapshot.data, index, 0);
+                                        setState(() {});
+                                      });
+                                } else {
+                                  return IconButton(
+                                      icon: const Icon(
+                                        Icons.favorite_border,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        updateFaveMovies(snapshot.data, index, 1);
+                                        setState(() {});
+                                      });
+                                }
+                              })
+                        ]),
                       ),
-                      onTap: () => openDetailPage(snapshot.data, index),
-                    )),
-                    StreamBuilder<FavMovies>(
-                        stream: isFavMovie(snapshot.data?.results[index].id)
-                            .asStream(),
-                        builder: (context, snapshot) {
-                          if (snapshot.data?.isFav == 1) {
-                            return IconButton(
-                                icon: const Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                ),
-                                onPressed: () {
-                                  updateFaveMovies(snapshot.data, index, 0);
-                                  setState(() {});
-                                });
-                          } else {
-                            return IconButton(
-                                icon: const Icon(
-                                  Icons.favorite_border,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  updateFaveMovies(snapshot.data, index, 1);
-                                  setState(() {});
-                                });
-                          }
-                        })
-                  ]),
-                ),
-                Text(
-                  snapshot.data?.results[index].title ?? '',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                      Text(
+                        snapshot.data?.results[index].title ?? '',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          );
-        });
+                );
+              }),
+        ),
+      ],
+    );
   }
 
   void updateFaveMovies(FavMovies? movies, int index, int isFav) async {

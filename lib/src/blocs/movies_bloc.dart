@@ -13,6 +13,11 @@ class MoviesBloc {
     _moviesFetcher.sink.add(itemModel);
   }
 
+  searchMoviesFromQuery(String query) async {
+    ItemModel itemModel = await _repository.searchMoviesFromQuery(query);
+    _moviesFetcher.sink.add(itemModel);
+  }
+
   dispose() {
     _moviesFetcher.close();
   }

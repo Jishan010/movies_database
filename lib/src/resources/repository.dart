@@ -10,4 +10,7 @@ class Repository {
 
   Future<TrailerModel> fetchTrailers(int movieId) =>
       _moviesApiProvider.fetchTrailer(movieId);
+
+  Future<ItemModel> searchMoviesFromQuery(String query) =>
+      _moviesApiProvider.fetchMoviesBySearcgQuery(query);
 }

@@ -34,9 +34,12 @@ class MovieApiProvider {
       throw Exception('Failed to load trailers');
     }
   }
+
   //https://api.themoviedb.org/3/search/movie?api_key={api_key}&query=Jack+Reacher
-  fetchMoviesBySearcgQuery(String query) async {
-    final response = await client.get(Uri.parse("$_baseUrl/movie?api_key=$_apiKey&query=$query"));
+  Future<ItemModel> fetchMoviesBySearcgQuery(String query) async {
+    final response = await client.get(Uri.parse("$_baseUrlForSearch/movie?api_key=$_apiKey&query=$query"));
+    print( "$_baseUrl/movie?api_key=$_apiKey&query=$query");
+    print(response.body.toString());
     if (response.statusCode == 200) {
       return ItemModel.fromJson(json.decode(response.body));
     } else {
