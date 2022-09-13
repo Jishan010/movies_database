@@ -1,10 +1,13 @@
-import '../resources/repository.dart';
+import 'package:movies_database/src/resources/repository_impl.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/item_model.dart';
+import '../resources/repository.dart';
 
 class MoviesBloc {
-  final _repository = Repository();
+  final Repository _repository;
   final _moviesFetcher = PublishSubject<ItemModel>();
+
+  MoviesBloc(this._repository);
 
   Stream<ItemModel> get allMovies => _moviesFetcher.stream;
 
@@ -23,4 +26,4 @@ class MoviesBloc {
   }
 }
 
-final bloc = MoviesBloc();
+final bloc = MoviesBloc(RepositoryImpl());

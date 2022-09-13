@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/database/fav_movies.dart';
+import 'package:movies_database/src/resources/repository_impl.dart';
 import '../database/fav_movies_dao.dart';
 import '../models/item_model.dart';
 import '../blocs/movies_bloc.dart';
@@ -106,7 +107,8 @@ class MovieListState extends State<MovieList> {
                                   'https://image.tmdb.org/t/p/w185${snapshot.data?.results[index].posterPath}',
                                   fit: BoxFit.cover,
                                 ),
-                                onTap: () => openDetailPage(snapshot.data, index),
+                                onTap: () =>
+                                    openDetailPage(snapshot.data, index),
                               )),
                             ),
                             StreamBuilder<FavMovies>(
@@ -115,27 +117,33 @@ class MovieListState extends State<MovieList> {
                                         .asStream(),
                                 builder: (context, snapshot) {
                                   if (snapshot.data?.isFav == 1) {
-                                    return IconButton(
-                                        icon: const Icon(
-                                          Icons.favorite,
-                                          color: Colors.red,
-                                        ),
-                                        onPressed: () {
-                                          updateFaveMovies(
-                                              snapshot.data, index, 0);
-                                          setState(() {});
-                                        });
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: IconButton(
+                                          icon: const Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                          ),
+                                          onPressed: () {
+                                            updateFaveMovies(
+                                                snapshot.data, index, 0);
+                                            setState(() {});
+                                          }),
+                                    );
                                   } else {
-                                    return IconButton(
-                                        icon: const Icon(
-                                          Icons.favorite_border,
-                                          color: Colors.white,
-                                        ),
-                                        onPressed: () {
-                                          updateFaveMovies(
-                                              snapshot.data, index, 1);
-                                          setState(() {});
-                                        });
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: IconButton(
+                                          icon: const Icon(
+                                            Icons.favorite_border,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            updateFaveMovies(
+                                                snapshot.data, index, 1);
+                                            setState(() {});
+                                          }),
+                                    );
                                   }
                                 })
                           ]),
@@ -180,6 +188,7 @@ class MovieListState extends State<MovieList> {
       context,
       MaterialPageRoute(builder: (context) {
         return MovieDetailBlocProvider(
+          repository: RepositoryImpl(),
           child: MovieDetail(
             title: data?.results[index].title,
             posterUrl: data?.results[index].backdropPath,

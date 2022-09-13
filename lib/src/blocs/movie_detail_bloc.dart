@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:movies_database/src/resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/trailer_model.dart';
-import '../resources/repository.dart';
 
 class MovieDetailBloc {
-  final _repository = Repository();
+  final Repository _repository;
   final _movieId = PublishSubject<int>();
   final _trailers = BehaviorSubject<Future<TrailerModel>>();
 
@@ -13,7 +13,7 @@ class MovieDetailBloc {
 
   Stream<Future<TrailerModel>> get movieTrailers => _trailers.stream;
 
-  MovieDetailBloc() {
+  MovieDetailBloc(this._repository) {
     _movieId.stream.transform(_itemTransformer()).pipe(_trailers);
   }
 
