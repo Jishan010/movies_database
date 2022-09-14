@@ -2,22 +2,34 @@ class ItemModel {
   int? _page;
   int? _totalResults;
   int? _totalPages;
-  List<_Result> _results = [];
+  List<Result> _results = [];
+
+  ItemModel({
+    int? page,
+    int? totalResults,
+    int? totalPages,
+    List<Result>? results,
+  }) {
+    _page = page;
+    _totalResults = totalResults;
+    _totalPages = totalPages;
+    _results = results ?? [];
+  }
 
   ItemModel.fromJson(Map<String, dynamic> parsedJson) {
     print(parsedJson['results'].length);
     _page = parsedJson['page'];
     _totalResults = parsedJson['total_results'];
     _totalPages = parsedJson['total_pages'];
-    List<_Result> temp = [];
+    List<Result> temp = [];
     for (int i = 0; i < parsedJson['results'].length; i++) {
-      _Result result = _Result(parsedJson['results'][i]);
+      Result result = Result(parsedJson['results'][i]);
       temp.add(result);
     }
     _results = temp;
   }
 
-  List<_Result> get results => _results;
+  List<Result> get results => _results;
 
   int? get totalPages => _totalPages;
 
@@ -26,7 +38,7 @@ class ItemModel {
   int? get page => _page;
 }
 
-class _Result {
+class Result {
   int? _voteCount;
   int? _id;
   bool? _video;
@@ -42,7 +54,39 @@ class _Result {
   String? _overview;
   String? _releaseDate;
 
-  _Result(result) {
+  Result.mapFromDatabase({
+    int? voteCount,
+    int? id,
+    bool? video,
+    var voteAverage,
+    String? title,
+    double? popularity,
+    String? posterPath,
+    String? originalLanguage,
+    String? originalTitle,
+    List<int>? genreIds,
+    String? backdropPath,
+    bool? adult,
+    String? overview,
+    String? releaseDate,
+  }) {
+    _voteCount = voteCount;
+    _id = id;
+    _video = video;
+    _voteAverage = voteAverage;
+    _title = title;
+    _popularity = popularity;
+    _posterPath = posterPath;
+    _originalLanguage = originalLanguage;
+    _originalTitle = originalTitle;
+    _genreIds = genreIds ?? [];
+    _backdropPath = backdropPath;
+    _adult = adult;
+    _overview = overview;
+    _releaseDate = releaseDate;
+  }
+
+  Result(result) {
     _voteCount = result['vote_count'];
     _id = result['id'];
     _video = result['video'];

@@ -81,13 +81,13 @@ class MovieListState extends State<MovieList> {
     );
   }
 
-  Widget buildList(AsyncSnapshot<ItemModel> snapshot) {
+  Widget buildList(AsyncSnapshot<ItemModel> snapshotFromNetwork) {
     return Column(
       children: [
         searchField(),
         Expanded(
           child: GridView.builder(
-              itemCount: snapshot.data?.results.length,
+              itemCount: snapshotFromNetwork.data?.results.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2),
               itemBuilder: (BuildContext context, int index) {
@@ -104,16 +104,16 @@ class MovieListState extends State<MovieList> {
                                   child: InkResponse(
                                 enableFeedback: true,
                                 child: Image.network(
-                                  'https://image.tmdb.org/t/p/w185${snapshot.data?.results[index].posterPath}',
+                                  'https://image.tmdb.org/t/p/w185${snapshotFromNetwork.data?.results[index].posterPath}',
                                   fit: BoxFit.cover,
                                 ),
                                 onTap: () =>
-                                    openDetailPage(snapshot.data, index),
+                                    openDetailPage(snapshotFromNetwork.data, index),
                               )),
                             ),
                             StreamBuilder<FavMovies>(
                                 stream:
-                                    isFavMovie(snapshot.data?.results[index].id)
+                                    isFavMovie(snapshotFromNetwork.data?.results[index].id)
                                         .asStream(),
                                 builder: (context, snapshot) {
                                   if (snapshot.data?.isFav == 1) {
@@ -126,7 +126,7 @@ class MovieListState extends State<MovieList> {
                                           ),
                                           onPressed: () {
                                             updateFaveMovies(
-                                                snapshot.data, index, 0);
+                                                snapshotFromNetwork.data, index, 0);
                                             setState(() {});
                                           }),
                                     );
@@ -140,7 +140,7 @@ class MovieListState extends State<MovieList> {
                                           ),
                                           onPressed: () {
                                             updateFaveMovies(
-                                                snapshot.data, index, 1);
+                                                snapshotFromNetwork.data, index, 1);
                                             setState(() {});
                                           }),
                                     );
@@ -149,7 +149,7 @@ class MovieListState extends State<MovieList> {
                           ]),
                         ),
                         Text(
-                          snapshot.data?.results[index].title ?? '',
+                          snapshotFromNetwork.data?.results[index].title ?? '',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -164,12 +164,12 @@ class MovieListState extends State<MovieList> {
     );
   }
 
-  void updateFaveMovies(FavMovies? movies, int index, int isFav) async {
-    String? posterPath = movies?.posterPath.toString();
-    int? id = movies?.id;
-    String? title = movies?.title;
-    String? releaseDate = movies?.releaseDate;
-    String? originalLanguage = movies?.originalLanguage;
+  void updateFaveMovies(ItemModel? itemModel, int index, int isFav) async {
+    String? posterPath = itemModel?.results[index].posterPath.toString();
+    int? id = itemModel?.results[index].id;
+    String? title = itemModel?.results[index].title;
+    String? releaseDate = itemModel?.results[index].releaseDate;
+    String? originalLanguage = itemModel?.results[index].originalLanguage;
     FavMovies favMovies = FavMovies(
         id!, title!, posterPath!, releaseDate!, originalLanguage!, isFav);
     widget.favMoviesDao.findMovieById(id).then((value) {

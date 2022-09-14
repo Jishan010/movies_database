@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:movies_database/src/data/movie_search_api_service.dart';
+import 'package:movies_database/src/database/fav_movies.dart';
 import '../data/movies_api_service.dart';
+import '../database/app_database.dart';
 import '../models/item_model.dart';
 import '../models/trailer_model.dart';
 
-class MovieApiProvider {
+class MovieApiDatSource {
   final _apiKey = 'a9d3771ee8051284ae7c6519283c76a2';
 
   Future<ItemModel> fetchMovieList() async {
@@ -43,6 +45,13 @@ class MovieApiProvider {
     } else {
       throw Exception('Failed to load trailers');
     }
+  }
+
+  //fetch movies from database
+  Future<List<FavMovies>> fetchAllMoviesFromDatabase() async {
+    final database = await $FloorAppDatabase.databaseBuilder('movies.db').build();
+    final favMoviesDao = database.favMoviesDao;
+    return await favMoviesDao.findAllFavMoviesList();
   }
 
 

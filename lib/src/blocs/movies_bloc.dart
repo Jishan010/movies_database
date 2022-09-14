@@ -1,3 +1,5 @@
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:movies_database/src/database/fav_movies.dart';
 import 'package:movies_database/src/resources/repository_impl.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/item_model.dart';
@@ -12,8 +14,35 @@ class MoviesBloc {
   Stream<ItemModel> get allMovies => _moviesFetcher.stream;
 
   fetchAllMovies() async {
-    ItemModel itemModel = await _repository.fetchAllMovies();
-    _moviesFetcher.sink.add(itemModel);
+    await InternetConnectionChecker().hasConnection.then((value) async {
+      if (value) {
+        ItemModel itemModel = await _repository.fetchAllMovies();
+        _moviesFetcher.sink.add(itemModel);
+      } else {
+        fetchAllMoviesFromDatabase();
+        //_moviesFetcher.sink.addError('No Internet Connection');
+      }
+    });
+  }
+
+  //if device is offline ,fetch movies from database
+  fetchAllMoviesFromDatabase() async {
+    var favMovies = (await _repository.fetchAllMoviesFromDatabase());
+    _moviesFetcher.sink.add(mapFavMoviesToItemModel(favMovies));
+  }
+
+  //create mapper to map favMovies to ItemModel
+  ItemModel mapFavMoviesToItemModel(List<FavMovies> favMovies) {
+    List<Result> results = [];
+    favMovies.forEach((element) {
+      results.add(Result.mapFromDatabase(
+          id: element.id,
+          title: element.title,
+          posterPath: element.posterPath,
+          originalLanguage: element.originalLanguage,
+          releaseDate: element.releaseDate));
+    });
+    return ItemModel(results: results);
   }
 
   searchMoviesFromQuery(String query) async {
