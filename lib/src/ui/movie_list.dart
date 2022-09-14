@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/database/fav_movies.dart';
+import 'package:movies_database/src/di/locator.dart';
 import 'package:movies_database/src/resources/remote_repository_impl.dart';
 import '../database/fav_movies_dao.dart';
 import '../models/item_model.dart';
 import '../blocs/movies_bloc.dart';
+import '../resources/remote_repository.dart';
 import 'movie_detail.dart';
 import '../blocs/movie_detail_bloc_provider.dart';
 
@@ -18,10 +20,13 @@ class MovieList extends StatefulWidget {
   }
 }
 
+//todo experiment with GetX , bloc and provider
 class MovieListState extends State<MovieList> {
+  late MoviesBloc bloc;
   @override
   void initState() {
     super.initState();
+    bloc = getIt<MoviesBloc>();
     bloc.fetchAllMovies();
   }
 
@@ -38,8 +43,9 @@ class MovieListState extends State<MovieList> {
         title: const Text('Popular Movies'),
       ),
       body: StreamBuilder(
-        stream: bloc.allMovies,
+        stream:  bloc.allMovies,
         builder: (context, AsyncSnapshot<ItemModel> snapshot) {
+          print("snapshot: ${snapshot.data}");
           if (snapshot.hasData) {
             return buildList(snapshot);
           } else if (snapshot.hasError) {
@@ -102,8 +108,7 @@ class MovieListState extends State<MovieList> {
                               )),
                             ),
                             StreamBuilder<FavMovies>(
-                                stream: bloc
-                                    .isFavoriteMovie(snapshotFromNetwork
+                                stream: bloc.isFavoriteMovie(snapshotFromNetwork
                                         .data?.results[index].id)
                                     .asStream(),
                                 builder: (context, snapshot) {
@@ -183,7 +188,7 @@ class MovieListState extends State<MovieList> {
       context,
       MaterialPageRoute(builder: (context) {
         return MovieDetailBlocProvider(
-          repository: RemoteRepositoryImpl(),
+          repository: getIt<RemoteRepository>(),
           child: MovieDetail(
             title: data?.results[index].title,
             posterUrl: data?.results[index].backdropPath,

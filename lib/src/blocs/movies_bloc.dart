@@ -1,8 +1,6 @@
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:movies_database/src/database/fav_movies.dart';
 import 'package:movies_database/src/resources/local_repository.dart';
-import 'package:movies_database/src/resources/local_repository_impl.dart';
-import 'package:movies_database/src/resources/remote_repository_impl.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/item_model.dart';
 import '../resources/remote_repository.dart';
@@ -37,14 +35,14 @@ class MoviesBloc {
   //create mapper to map favMovies to ItemModel
   ItemModel mapFavMoviesToItemModel(List<FavMovies> favMovies) {
     List<Result> results = [];
-    favMovies.forEach((element) {
+    for (var element in favMovies) {
       results.add(Result.mapFromDatabase(
           id: element.id,
           title: element.title,
           posterPath: element.posterPath,
           originalLanguage: element.originalLanguage,
           releaseDate: element.releaseDate));
-    });
+    }
     return ItemModel(results: results);
   }
 
@@ -61,5 +59,3 @@ class MoviesBloc {
     _moviesFetcher.close();
   }
 }
-
-final bloc = MoviesBloc(RemoteRepositoryImpl(), LocalRepositoryImpl());

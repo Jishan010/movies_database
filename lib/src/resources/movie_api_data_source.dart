@@ -16,6 +16,7 @@ class MovieApiDatSource {
     final response = await service.getPopularMovies(_apiKey);
     print(response.body);
     if (response.statusCode == 200) {
+      print("${response.statusCode}");
       // If the call to the server was successful, parse the JSON
       return ItemModel.fromJson(response.body);
     } else {

@@ -7,7 +7,8 @@ import 'movie_api_data_source.dart';
 import '../models/item_model.dart';
 
 class RemoteRepositoryImpl extends RemoteRepository {
-  final _moviesApiDataSource = MovieApiDatSource();
+  final MovieApiDatSource _moviesApiDataSource;
+  RemoteRepositoryImpl(this._moviesApiDataSource);
 
   @override
   Future<ItemModel> fetchAllMovies() => _moviesApiDataSource.fetchMovieList();
