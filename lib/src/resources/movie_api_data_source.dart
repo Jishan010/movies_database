@@ -54,5 +54,18 @@ class MovieApiDatSource {
     return await favMoviesDao.findAllFavMoviesList();
   }
 
+  //function to check if movie is fav
+  Future<FavMovies> isFavMovie(int? id) async {
+    final database = await $FloorAppDatabase.databaseBuilder('movies.db').build();
+    final favMoviesDao = database.favMoviesDao;
+    final favMovies = await favMoviesDao.findMovieById(id!);
+    if (favMovies != null) {
+      return favMovies;
+    } else {
+      return FavMovies(id, '', '', '', '', 0);
+    }
+  }
+
+
 
 }

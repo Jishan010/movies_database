@@ -53,9 +53,13 @@ class MoviesBloc {
     _moviesFetcher.sink.add(itemModel);
   }
 
+  Future<FavMovies> isFavoriteMovie(int? id) async {
+    return await _localRepository.isFavMovie(id);
+  }
+
   dispose() {
     _moviesFetcher.close();
   }
 }
 
-final bloc = MoviesBloc(RemoteRepositoryImpl(),LocalRepositoryImpl());
+final bloc = MoviesBloc(RemoteRepositoryImpl(), LocalRepositoryImpl());

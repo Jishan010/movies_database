@@ -19,16 +19,6 @@ class MovieList extends StatefulWidget {
 }
 
 class MovieListState extends State<MovieList> {
-  //function to check if movie is fav
-  Future<FavMovies> isFavMovie(int? id) async {
-    final favMovies = await widget.favMoviesDao.findMovieById(id!);
-    if (favMovies != null) {
-      return favMovies;
-    } else {
-      return FavMovies(id, '', '', '', '', 0);
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -107,14 +97,15 @@ class MovieListState extends State<MovieList> {
                                   'https://image.tmdb.org/t/p/w185${snapshotFromNetwork.data?.results[index].posterPath}',
                                   fit: BoxFit.cover,
                                 ),
-                                onTap: () =>
-                                    openDetailPage(snapshotFromNetwork.data, index),
+                                onTap: () => openDetailPage(
+                                    snapshotFromNetwork.data, index),
                               )),
                             ),
                             StreamBuilder<FavMovies>(
-                                stream:
-                                    isFavMovie(snapshotFromNetwork.data?.results[index].id)
-                                        .asStream(),
+                                stream: bloc
+                                    .isFavoriteMovie(snapshotFromNetwork
+                                        .data?.results[index].id)
+                                    .asStream(),
                                 builder: (context, snapshot) {
                                   if (snapshot.data?.isFav == 1) {
                                     return Padding(
@@ -126,7 +117,9 @@ class MovieListState extends State<MovieList> {
                                           ),
                                           onPressed: () {
                                             updateFaveMovies(
-                                                snapshotFromNetwork.data, index, 0);
+                                                snapshotFromNetwork.data,
+                                                index,
+                                                0);
                                             setState(() {});
                                           }),
                                     );
@@ -140,7 +133,9 @@ class MovieListState extends State<MovieList> {
                                           ),
                                           onPressed: () {
                                             updateFaveMovies(
-                                                snapshotFromNetwork.data, index, 1);
+                                                snapshotFromNetwork.data,
+                                                index,
+                                                1);
                                             setState(() {});
                                           }),
                                     );

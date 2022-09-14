@@ -10,4 +10,9 @@ class LocalRepositoryImpl extends LocalRepository {
   Future<List<FavMovies>> fetchAllMoviesFromDatabase() {
     return _moviesApiDataSource.fetchAllMoviesFromDatabase();
   }
+
+  @override
+  Future<FavMovies> isFavMovie(int? id) {
+    return _moviesApiDataSource.isFavMovie(id);
+  }
 }
