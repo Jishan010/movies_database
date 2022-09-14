@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:movies_database/src/resources/repository.dart';
+import 'package:movies_database/src/resources/remote_repository.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/trailer_model.dart';
 
 class MovieDetailBloc {
-  final Repository _repository;
+  final RemoteRepository _repository;
   final _movieId = PublishSubject<int>();
   final _trailers = BehaviorSubject<Future<TrailerModel>>();
 

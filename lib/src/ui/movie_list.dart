@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/database/fav_movies.dart';
-import 'package:movies_database/src/resources/repository_impl.dart';
+import 'package:movies_database/src/resources/remote_repository_impl.dart';
 import '../database/fav_movies_dao.dart';
 import '../models/item_model.dart';
 import '../blocs/movies_bloc.dart';
@@ -188,7 +188,7 @@ class MovieListState extends State<MovieList> {
       context,
       MaterialPageRoute(builder: (context) {
         return MovieDetailBlocProvider(
-          repository: RepositoryImpl(),
+          repository: RemoteRepositoryImpl(),
           child: MovieDetail(
             title: data?.results[index].title,
             posterUrl: data?.results[index].backdropPath,

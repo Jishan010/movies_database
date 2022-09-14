@@ -1,15 +1,18 @@
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:movies_database/src/database/fav_movies.dart';
-import 'package:movies_database/src/resources/repository_impl.dart';
+import 'package:movies_database/src/resources/local_repository.dart';
+import 'package:movies_database/src/resources/local_repository_impl.dart';
+import 'package:movies_database/src/resources/remote_repository_impl.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/item_model.dart';
-import '../resources/repository.dart';
+import '../resources/remote_repository.dart';
 
 class MoviesBloc {
-  final Repository _repository;
+  final RemoteRepository _repository;
+  final LocalRepository _localRepository;
   final _moviesFetcher = PublishSubject<ItemModel>();
 
-  MoviesBloc(this._repository);
+  MoviesBloc(this._repository, this._localRepository);
 
   Stream<ItemModel> get allMovies => _moviesFetcher.stream;
 
@@ -27,7 +30,7 @@ class MoviesBloc {
 
   //if device is offline ,fetch movies from database
   fetchAllMoviesFromDatabase() async {
-    var favMovies = (await _repository.fetchAllMoviesFromDatabase());
+    var favMovies = (await _localRepository.fetchAllMoviesFromDatabase());
     _moviesFetcher.sink.add(mapFavMoviesToItemModel(favMovies));
   }
 
@@ -55,4 +58,4 @@ class MoviesBloc {
   }
 }
 
-final bloc = MoviesBloc(RepositoryImpl());
+final bloc = MoviesBloc(RemoteRepositoryImpl(),LocalRepositoryImpl());

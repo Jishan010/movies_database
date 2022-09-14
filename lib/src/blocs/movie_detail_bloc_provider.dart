@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../resources/repository.dart';
+import '../resources/remote_repository.dart';
 import 'movie_detail_bloc.dart';
 export 'movie_detail_bloc.dart';
 
 class MovieDetailBlocProvider extends InheritedWidget {
   final MovieDetailBloc bloc;
- final Repository repository;
+ final RemoteRepository repository;
   MovieDetailBlocProvider({Key? key, required Widget child,required this.repository})
       : bloc = MovieDetailBloc(repository),
         super(key: key, child: child);

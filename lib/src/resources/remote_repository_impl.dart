@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:movies_database/src/database/fav_movies.dart';
-import 'package:movies_database/src/resources/repository.dart';
+import 'package:movies_database/src/resources/remote_repository.dart';
 
 import '../models/trailer_model.dart';
 import 'movie_api_data_source.dart';
 import '../models/item_model.dart';
 
-class RepositoryImpl extends Repository {
+class RemoteRepositoryImpl extends RemoteRepository {
   final _moviesApiDataSource = MovieApiDatSource();
 
   @override
