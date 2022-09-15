@@ -4,7 +4,7 @@ import 'package:movies_database/src/resources/local_repository.dart';
 import 'movie_api_data_source.dart';
 
 class LocalRepositoryImpl extends LocalRepository {
-  final MovieApiDatSource _moviesApiDataSource;
+  final MovieApiDataSource _moviesApiDataSource;
   LocalRepositoryImpl(this._moviesApiDataSource);
 
   @override

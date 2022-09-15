@@ -7,7 +7,7 @@ import 'movie_api_data_source.dart';
 import '../models/item_model.dart';
 
 class RemoteRepositoryImpl extends RemoteRepository {
-  final MovieApiDatSource _moviesApiDataSource;
+  final MovieApiDataSource _moviesApiDataSource;
   RemoteRepositoryImpl(this._moviesApiDataSource);
 
   @override
