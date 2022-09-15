@@ -31,4 +31,12 @@ class _$MovieApiService extends MovieApiService {
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> searchMovies(String apiKey, String query) {
+    final $url = '/search/movie';
+    final $params = <String, dynamic>{'api_key': apiKey, 'query': query};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
 }

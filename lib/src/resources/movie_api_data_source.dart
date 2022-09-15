@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:movies_database/src/data/movie_search_api_service.dart';
 import 'package:movies_database/src/database/fav_movies.dart';
 import '../data/movies_api_service.dart';
 import '../database/app_database.dart';
@@ -38,7 +37,7 @@ class MovieApiDatSource {
 
   //https://api.themovied454.04b.org/3/search/movie?api_key={api_key}&query=Jack+Reacher
   Future<ItemModel> fetchMoviesBySearcgQuery(String query) async {
-   MovieSearchApiService service = MovieSearchApiService.create();
+    MovieApiService service = MovieApiService.create();
     final response = await service.searchMovies(_apiKey, query);
     print(response.body.toString());
     if (response.statusCode == 200) {
@@ -66,7 +65,5 @@ class MovieApiDatSource {
       return FavMovies(id, '', '', '', '', 0);
     }
   }
-
-
 
 }
