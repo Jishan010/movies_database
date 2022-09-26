@@ -15,7 +15,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
-        body: MovieList(favMoviesDao),
+        body: MoviesList(favMoviesDao),
       ),
     );
   }
