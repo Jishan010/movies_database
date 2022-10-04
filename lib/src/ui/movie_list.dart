@@ -21,7 +21,19 @@ class MoviesList extends StatelessWidget {
         ..add(FetchMovies()),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Movies'),
+          actions: [IconButton(
+              iconSize: 30,
+              onPressed: () {}, icon: Icon(Icons.search))],
+          backgroundColor: Colors.black12,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 35,
+            fontWeight: FontWeight.bold,
+          ),
+          title: Text(
+            'Watch Now',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         body: BlocBuilder<MoviesListBloc, MoviesState>(
           builder: (context, state) {
@@ -82,7 +94,7 @@ class MoviesList extends StatelessWidget {
       itemBuilder: (context, index) {
         //add tap event to the movie poster
         return GestureDetector(
-          onTap:() {
+          onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -93,7 +105,8 @@ class MoviesList extends StatelessWidget {
                     posterUrl: listOfmovies?.results[index].backdropPath,
                     description: listOfmovies?.results[index].overview,
                     releaseDate: listOfmovies?.results[index].releaseDate,
-                    voteAverage: listOfmovies?.results[index].voteAverage.toString(),
+                    voteAverage:
+                        listOfmovies?.results[index].voteAverage.toString(),
                     movieId: listOfmovies?.results[index].id,
                   ),
                 ),
@@ -101,6 +114,10 @@ class MoviesList extends StatelessWidget {
             );
           },
           child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.black12,
+            ),
             padding: const EdgeInsets.all(10.0),
             child: Stack(children: [
               Card(
