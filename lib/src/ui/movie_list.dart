@@ -77,59 +77,106 @@ class MoviesList extends StatelessWidget {
   }*/
 
   Widget buildMovieList(listOfmovies) {
-    return Column(
-      children: [
-        searchField(),
-        Expanded(
-          child: GridView.builder(
-            itemCount: listOfmovies.results.length,
-            itemBuilder: (context, index) {
-              return Card(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: GridTile(
-                        child: InkResponse(
-                          enableFeedback: true,
-                          child: Image.network(
-                            'https://image.tmdb.org/t/p/w500${listOfmovies.results[index].posterPath}',
-                            fit: BoxFit.cover,
-                          ),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MovieDetailBlocProvider(
-                                repository: getIt<RemoteRepository>(),
-                                child: MovieDetail(
-                                  title: listOfmovies.results[index].title,
-                                  posterUrl:
-                                      listOfmovies.results[index].backdropPath,
-                                  description:
-                                      listOfmovies.results[index].overview,
-                                  releaseDate:
-                                      listOfmovies.results[index].releaseDate,
-                                  voteAverage: listOfmovies
-                                      ?.results[index].voteAverage
-                                      .toString(),
-                                  movieId: listOfmovies?.results[index].id,
-                                ),
-                              ),
-                            ),
-                          ),
+    return GridView.builder(
+      itemCount: listOfmovies.results.length,
+      itemBuilder: (context, index) {
+        //add tap event to the movie poster
+        return GestureDetector(
+          onTap:() {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MovieDetailBlocProvider(
+                  repository: getIt<RemoteRepository>(),
+                  child: MovieDetail(
+                    title: listOfmovies?.results[index].title,
+                    posterUrl: listOfmovies?.results[index].backdropPath,
+                    description: listOfmovies?.results[index].overview,
+                    releaseDate: listOfmovies?.results[index].releaseDate,
+                    voteAverage: listOfmovies?.results[index].voteAverage.toString(),
+                    movieId: listOfmovies?.results[index].id,
+                  ),
+                ),
+              ),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10.0),
+            child: Stack(children: [
+              Card(
+                elevation: 5,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.transparent, width: 1),
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: Image.network(
+                  'https://image.tmdb.org/t/p/w500${listOfmovies.results[index].posterPath}',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Container(
+                alignment: Alignment.bottomCenter,
+                padding: const EdgeInsets.all(10.0),
+                height: 300,
+                width: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.9),
+                    ],
+                  ),
+                ),
+                child: Card(
+                  elevation: 0,
+                  color: Colors.transparent,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        listOfmovies.results[index].title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    Text(listOfmovies.results[index].title),
-                  ],
+                      Text(
+                        listOfmovies.results[index].releaseDate,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        listOfmovies.results[index].overview,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            },
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-            ),
+              ),
+            ]),
           ),
-        ),
-      ],
+        );
+      },
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.7,
+      ),
     );
   }
 }
