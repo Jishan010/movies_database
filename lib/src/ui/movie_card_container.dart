@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class MovieCardContainer extends StatelessWidget {
-  String posterUrl;
-  String title;
-  String releaseDate;
-  String overview;
-  int movieId;
+  final String? posterUrl;
+  final String? title;
+  final String? releaseDate;
+  final String? overview;
+  final int? movieId;
 
-  MovieCardContainer({
+  const MovieCardContainer({
     Key? key,
     required this.movieId,
     required this.posterUrl,
@@ -32,10 +32,8 @@ class MovieCardContainer extends StatelessWidget {
             side: const BorderSide(color: Colors.transparent, width: 1),
             borderRadius: BorderRadius.circular(15.0),
           ),
-          child: Image.network(
-            'https://image.tmdb.org/t/p/w500${posterUrl}',
-            fit: BoxFit.cover,
-          ),
+          child: posterUrl != null ? Image.network(
+            'https://image.tmdb.org/t/p/w500$posterUrl', fit: BoxFit.cover,) : const Icon(Icons.error, color: Colors.red,),
         ),
         Container(
           alignment: Alignment.bottomCenter,
@@ -61,7 +59,7 @@ class MovieCardContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  title == null ? '' : title!,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -69,7 +67,7 @@ class MovieCardContainer extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  releaseDate,
+                  releaseDate == null ? '' : releaseDate!,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -79,7 +77,7 @@ class MovieCardContainer extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  overview,
+                  overview == null ? '' : overview!,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/database/fav_movies_dao.dart';
-import 'ui/movie_list.dart';
+import 'ui/home_screen.dart';
 
 class App extends StatelessWidget {
   final FavMoviesDao favMoviesDao;
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home: Scaffold(
-        body: MoviesList(favMoviesDao),
+        body: HomeScreen(favMoviesDao),
       ),
     );
   }
