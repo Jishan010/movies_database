@@ -33,7 +33,7 @@ class MovieCardContainer extends StatelessWidget {
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: posterUrl != null ? Image.network(
-            'https://image.tmdb.org/t/p/w500$posterUrl', fit: BoxFit.cover,) : const Icon(Icons.error, color: Colors.red,),
+            'https://image.tmdb.org/t/p/w500$posterUrl', fit: BoxFit.cover,) :  const Center(child: Text('No Image', style: TextStyle(color: Colors.white,background: null),)),
         ),
         Container(
           alignment: Alignment.bottomCenter,
