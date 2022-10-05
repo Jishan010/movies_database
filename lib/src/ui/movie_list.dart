@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/di/locator.dart';
+import 'package:movies_database/src/models/item_model.dart';
 import '../blocs/movies_event.dart';
 import '../blocs/movies_list_bloc.dart';
 import '../blocs/movies_state.dart';
@@ -19,34 +21,85 @@ class MoviesList extends StatelessWidget {
     return BlocProvider(
       create: (context) => MoviesListBloc(repository: getIt<RemoteRepository>())
         ..add(FetchMovies()),
-      child: Scaffold(
-        appBar: AppBar(
-          actions: [IconButton(
-              iconSize: 30,
-              onPressed: () {}, icon: Icon(Icons.search))],
-          backgroundColor: Colors.black12,
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 35,
-            fontWeight: FontWeight.bold,
+      child: DefaultTabController(
+        length: 4,
+        initialIndex: 0,
+        child: SafeArea(
+          child: Scaffold(
+            body: NestedScrollView(
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverAppBar(
+                    foregroundColor: Colors.white,
+                      titleTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      backgroundColor: Colors.black12,
+                      actions: [
+                        IconButton(
+                            iconSize: 30,
+                            onPressed: () {},
+                            icon: const Icon(Icons.search))
+                      ],
+                      title: const Text(
+                        'Watch Now',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      floating: true,
+                      pinned: true,
+                      bottom: TabBar(
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicator: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            // Creates border
+                            color: Colors.green),
+                        isScrollable: true,
+                        dragStartBehavior: DragStartBehavior.start,
+                        physics: const BouncingScrollPhysics(),
+                        tabs: [
+                          Tab(
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              child: const Text('Popular'),
+                            ),
+                          ),
+                          Tab(
+                              child: Container(
+                            padding: const EdgeInsets.all(10),
+                            child: const Text('Top Rated'),
+                          )),
+                          Tab(
+                              child: Container(
+                            padding: const EdgeInsets.all(10),
+                            child: const Text('Upcoming'),
+                          )),
+                          Tab(
+                              child: Container(
+                            padding: const EdgeInsets.all(10),
+                            child: const Text('Now Playing'),
+                          )),
+                        ],
+                      )),
+                ];
+              },
+              body: BlocBuilder<MoviesListBloc, MoviesState>(
+                builder: (context, state) {
+                  if (state is MoviesLoadingState) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is MoviesLoadedState) {
+                    return buildMovieList(state.listOfmovies);
+                  } else if (state is MoviesErrorState) {
+                    return const Center(child: Text('Error loading movies'));
+                  } else {
+                    return const Center(child: Text('Error loading movies'));
+                  }
+                },
+              ),
+            ),
           ),
-          title: Text(
-            'Watch Now',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        body: BlocBuilder<MoviesListBloc, MoviesState>(
-          builder: (context, state) {
-            if (state is MoviesLoadingState) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is MoviesLoadedState) {
-              return buildMovieList(state.listOfmovies);
-            } else if (state is MoviesErrorState) {
-              return Center(child: Text('Error loading movies'));
-            } else {
-              return Center(child: Text('Error loading movies'));
-            }
-          },
         ),
       ),
     );
@@ -124,7 +177,7 @@ class MoviesList extends StatelessWidget {
                 elevation: 5,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.transparent, width: 1),
+                  side: const BorderSide(color: Colors.transparent, width: 1),
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: Image.network(
@@ -157,7 +210,7 @@ class MoviesList extends StatelessWidget {
                     children: [
                       Text(
                         listOfmovies.results[index].title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -165,19 +218,19 @@ class MoviesList extends StatelessWidget {
                       ),
                       Text(
                         listOfmovies.results[index].releaseDate,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(
                         listOfmovies.results[index].overview,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
                         ),
@@ -196,4 +249,10 @@ class MoviesList extends StatelessWidget {
       ),
     );
   }
+}
+
+class MoviesLoaded {
+  final List<ItemModel> listOfmovies;
+
+  MoviesLoaded(this.listOfmovies);
 }
