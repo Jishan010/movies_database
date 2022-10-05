@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/di/locator.dart';
-import 'package:movies_database/src/models/item_model.dart';
+import 'package:movies_database/src/ui/movie_card_container.dart';
+import 'package:movies_database/src/ui/search_movie.dart';
 import '../blocs/movies_event.dart';
 import '../blocs/movies_list_bloc.dart';
 import '../blocs/movies_state.dart';
@@ -11,11 +12,16 @@ import 'movie_detail.dart';
 import '../blocs/movie_detail_bloc_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MoviesList extends StatelessWidget {
+class MoviesList extends StatefulWidget {
   final FavMoviesDao favMoviesDao;
 
   const MoviesList(this.favMoviesDao, {Key? key}) : super(key: key);
 
+  @override
+  State<MoviesList> createState() => _MoviesListState();
+}
+
+class _MoviesListState extends State<MoviesList> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -31,17 +37,22 @@ class MoviesList extends StatelessWidget {
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverAppBar(
-                    foregroundColor: Colors.white,
+                      foregroundColor: Colors.white,
                       titleTextStyle: const TextStyle(
                         color: Colors.white,
                         fontSize: 35,
                         fontWeight: FontWeight.bold,
                       ),
-                      backgroundColor: Colors.black12,
+                      backgroundColor: Colors.black26,
                       actions: [
                         IconButton(
                             iconSize: 30,
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SearchMovie()));
+                            },
                             icon: const Icon(Icons.search))
                       ],
                       title: const Text(
@@ -105,23 +116,6 @@ class MoviesList extends StatelessWidget {
     );
   }
 
-  Widget searchField() {
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      child: TextField(
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: 'Eg. The Dark Knight',
-          prefixIcon: Icon(Icons.search),
-        ),
-        onSubmitted: (value) {
-          if (value.isNotEmpty) {
-          } else {}
-        },
-      ),
-    );
-  }
-
   /*void updateFaveMovies(ItemModel? itemModel, int index, int isFav) async {
     String? posterPath = itemModel?.results[index].posterPath.toString();
     int? id = itemModel?.results[index].id;
@@ -140,7 +134,6 @@ class MoviesList extends StatelessWidget {
       }
     });
   }*/
-
   Widget buildMovieList(listOfmovies) {
     return GridView.builder(
       itemCount: listOfmovies.results.length,
@@ -166,80 +159,12 @@ class MoviesList extends StatelessWidget {
               ),
             );
           },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.black12,
-            ),
-            padding: const EdgeInsets.all(10.0),
-            child: Stack(children: [
-              Card(
-                elevation: 5,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(color: Colors.transparent, width: 1),
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Image.network(
-                  'https://image.tmdb.org/t/p/w500${listOfmovies.results[index].posterPath}',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
-                alignment: Alignment.bottomCenter,
-                padding: const EdgeInsets.all(10.0),
-                height: 300,
-                width: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.9),
-                    ],
-                  ),
-                ),
-                child: Card(
-                  elevation: 0,
-                  color: Colors.transparent,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        listOfmovies.results[index].title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        listOfmovies.results[index].releaseDate,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        listOfmovies.results[index].overview,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ]),
+          child: MovieCardContainer(
+            title: listOfmovies?.results[index].title,
+            posterUrl: listOfmovies?.results[index].posterPath,
+            releaseDate: listOfmovies?.results[index].releaseDate,
+            movieId: listOfmovies?.results[index].id,
+            overview: listOfmovies?.results[index].overview,
           ),
         );
       },
@@ -249,10 +174,4 @@ class MoviesList extends StatelessWidget {
       ),
     );
   }
-}
-
-class MoviesLoaded {
-  final List<ItemModel> listOfmovies;
-
-  MoviesLoaded(this.listOfmovies);
 }

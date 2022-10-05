@@ -15,5 +15,15 @@ class MoviesListBloc extends Bloc<MoviesEvent, MoviesState> {
         emit(MoviesErrorState(message: _.toString()));
       }
     });
+
+    on<FetchMoviesByQuery>((event, emit) async {
+      try {
+        final movies = await repository.searchMoviesFromQuery(event.query);
+        emit(MoviesLoadedState(listOfmovies: movies));
+      } catch (_) {
+        emit(MoviesErrorState(message: _.toString()));
+      }
+    });
+
   }
 }
