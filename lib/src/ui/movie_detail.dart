@@ -197,17 +197,20 @@ class MovieDetailState extends State<MovieDetail> {
   }
 
   trailerItem(TrailerModel? data, int index) {
-    return Expanded(
-      child: Column(
+    return  Column(
         children: <Widget>[
           Container(
             margin: const EdgeInsets.all(5.0),
             height: 200.0,
-            color: Colors.grey,
             child: Stack(
               children: [
                 const Icon(Icons.play_circle_filled),
                 YoutubePlayer(
+                  progressIndicatorColor: Colors.amber,
+                  progressColors: const ProgressBarColors(
+                    playedColor: Colors.amber,
+                    handleColor: Colors.amberAccent,
+                  ),
                   controller:
                       getYouTubePlayerController(data?.results[index].key),
                   showVideoProgressIndicator: true,
@@ -232,15 +235,14 @@ class MovieDetailState extends State<MovieDetail> {
             overflow: TextOverflow.ellipsis,
           ),
         ],
-      ),
-    );
+      );
   }
 
   YoutubePlayerController getYouTubePlayerController(String? videoIdKey) {
     return YoutubePlayerController(
       initialVideoId: videoIdKey!,
       flags: const YoutubePlayerFlags(
-        autoPlay: true,
+        autoPlay: false,
         mute: false,
       ),
     );
