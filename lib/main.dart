@@ -6,5 +6,5 @@ import 'src/app.dart';
 Future<void> main() async {
   getItInit();
   WidgetsFlutterBinding.ensureInitialized();
-  getIt.allReady().then((value) => runApp(App(getIt<FavMoviesDao>())));
+  getIt.allReady().then((value) => runApp(App()));
 }

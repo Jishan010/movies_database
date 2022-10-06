@@ -9,7 +9,8 @@ class MovieApiDataSource {
   final _apiKey = 'a9d3771ee8051284ae7c6519283c76a2';
   late MovieApiService service;
   late FavMoviesDao favMoviesDao;
-  MovieApiDataSource(this.service,this.favMoviesDao);
+
+  MovieApiDataSource(this.service, this.favMoviesDao);
 
   Future<ItemModel> fetchMovieList() async {
     print("entered");
@@ -59,5 +60,21 @@ class MovieApiDataSource {
     } else {
       return FavMovies(id, '', '', '', '', 0);
     }
+  }
+
+  //function to add movie to fav
+  Future<bool> addMovieToFav(FavMovies favMovies) async {
+    favMoviesDao.insertFavMovies(favMovies);
+    return true;
+  }
+
+  //function to delete movie from fav
+  Future<bool> deleteMovieFromFav(int? id) async {
+    final movie = await favMoviesDao.findMovieById(id!);
+    if (movie != null) {
+      favMoviesDao.deleteFavMovies(movie.id);
+      return true;
+    }
+    return false;
   }
 }

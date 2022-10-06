@@ -5,6 +5,7 @@ import 'package:movies_database/src/di/locator.dart';
 import '../blocs/movie_detail/movie_detail_event.dart';
 import '../blocs/movie_detail/movie_detail_state.dart';
 import '../models/trailer_model.dart';
+import '../resources/local_repository.dart';
 import '../resources/remote_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -42,7 +43,7 @@ class MovieDetail extends StatefulWidget {
 
 class MovieDetailState extends State<MovieDetail> {
   MovieDetailBloc movieDetailBloc =
-      MovieDetailBloc(repository: getIt<RemoteRepository>());
+      MovieDetailBloc(repository: getIt<RemoteRepository>(), localRepository: getIt<LocalRepository>());
 
   final posterUrl;
   final description;
@@ -83,6 +84,15 @@ class MovieDetailState extends State<MovieDetail> {
                     "https://image.tmdb.org/t/p/w500$posterUrl",
                     fit: BoxFit.cover,
                   )),
+                  actions: [
+                    IconButton(
+                        onPressed: () {
+                          //add to favorite
+
+
+                        },
+                        icon: const Icon(Icons.favorite_border))
+                  ],
                 ),
               ];
             },
@@ -251,4 +261,8 @@ class MovieDetailState extends State<MovieDetail> {
       ),
     );
   }
+
+
+
+
 }

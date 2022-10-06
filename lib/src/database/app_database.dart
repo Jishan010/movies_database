@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'package:floor/floor.dart';
 import 'package:movies_database/src/database/fav_movies.dart';
 import 'package:movies_database/src/database/fav_movies_dao.dart';

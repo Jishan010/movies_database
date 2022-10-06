@@ -3,10 +3,8 @@ import 'package:movies_database/src/database/fav_movies_dao.dart';
 import 'ui/home_screen.dart';
 
 class App extends StatelessWidget {
-  final FavMoviesDao favMoviesDao;
 
-  const App(
-    this.favMoviesDao, {
+  const App({
     Key? key,
   }) : super(key: key);
 
@@ -16,7 +14,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home: Scaffold(
-        body: HomeScreen(favMoviesDao),
+        body: HomeScreen(),
       ),
     );
   }

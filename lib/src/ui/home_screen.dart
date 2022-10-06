@@ -5,15 +5,13 @@ import 'package:movies_database/src/ui/search_movie.dart';
 import '../blocs/movies/movies_event.dart';
 import '../blocs/movies/movies_list_bloc.dart';
 import '../blocs/movies/movies_state.dart';
-import '../database/fav_movies_dao.dart';
 import '../resources/remote_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'movie_list.dart';
 
 class HomeScreen extends StatefulWidget {
-  final FavMoviesDao favMoviesDao;
 
-  const HomeScreen(this.favMoviesDao, {Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -115,23 +113,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-/*void updateFaveMovies(ItemModel? itemModel, int index, int isFav) async {
-    String? posterPath = itemModel?.results[index].posterPath.toString();
-    int? id = itemModel?.results[index].id;
-    String? title = itemModel?.results[index].title;
-    String? releaseDate = itemModel?.results[index].releaseDate;
-    String? originalLanguage = itemModel?.results[index].originalLanguage;
-    FavMovies favMovies = FavMovies(
-        id!, title!, posterPath!, releaseDate!, originalLanguage!, isFav);
-    widget.favMoviesDao.findMovieById(id).then((value) {
-      if (value != null) {
-        print("Favorite deleted $id");
-        widget.favMoviesDao.deleteFavMovies(favMovies.id);
-      } else {
-        print("Favorite added $id");
-        widget.favMoviesDao.insertFavMovies(favMovies);
-      }
-    });
-  }*/
 }

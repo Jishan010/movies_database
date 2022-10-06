@@ -16,4 +16,14 @@ class LocalRepositoryImpl extends LocalRepository {
   Future<FavMovies> isFavMovie(int? id) {
     return _moviesApiDataSource.isFavMovie(id);
   }
+
+  @override
+  Future<bool> addMovieToFav(FavMovies favMovies) {
+    return _moviesApiDataSource.addMovieToFav(favMovies);
+  }
+
+  @override
+  Future<bool> removeMovieFromFav(int? id) {
+    return _moviesApiDataSource.deleteMovieFromFav(id);
+  }
 }
