@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:movies_database/src/blocs/movie_detail_bloc.dart';
-import 'package:movies_database/src/blocs/movie_detail_state.dart';
+import 'package:movies_database/src/blocs/movie_detail/movie_detail_bloc.dart';
 import 'package:movies_database/src/di/locator.dart';
-import '../blocs/movie_detail_event.dart';
+import '../blocs/movie_detail/movie_detail_event.dart';
+import '../blocs/movie_detail/movie_detail_state.dart';
 import '../models/trailer_model.dart';
 import '../resources/remote_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -232,6 +232,10 @@ class MovieDetailState extends State<MovieDetail> {
           Text(
             data?.results[index].name ?? "",
             maxLines: 1,
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
             overflow: TextOverflow.ellipsis,
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-import '../models/trailer_model.dart';
+import '../../models/trailer_model.dart';
 
 @immutable
 abstract class MovieTrailerDetailState extends Equatable {}

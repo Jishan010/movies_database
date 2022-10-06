@@ -1,5 +1,5 @@
-import '../resources/remote_repository.dart';
-import 'movies_event.dart';
+import '../../resources/remote_repository.dart';
+import '../movies/movies_event.dart';
 import 'movies_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
