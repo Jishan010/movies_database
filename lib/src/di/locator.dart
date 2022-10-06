@@ -1,10 +1,8 @@
 import 'package:get_it/get_it.dart';
-import 'package:movies_database/src/blocs/movies_bloc.dart';
 import 'package:movies_database/src/database/app_database.dart';
 import 'package:movies_database/src/database/fav_movies_dao.dart';
 import 'package:movies_database/src/resources/local_repository.dart';
 import 'package:movies_database/src/resources/local_repository_impl.dart';
-import 'package:movies_database/src/database/app_database.dart';
 import '../data/movies_api_service.dart';
 import '../resources/movie_api_data_source.dart';
 import '../resources/remote_repository.dart';
@@ -13,9 +11,6 @@ import '../resources/remote_repository_impl.dart';
 final getIt = GetIt.instance;
 
 void getItInit() {
-  //add depedency for bloc
-  getIt.registerFactory(() => MoviesBloc(getIt(), getIt()));
-
   //setup dependency for repository
   getIt.registerLazySingleton<RemoteRepository>(
       () => RemoteRepositoryImpl(getIt()));

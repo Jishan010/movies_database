@@ -1,38 +1,20 @@
-import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../resources/remote_repository.dart';
+import 'movie_detail_event.dart';
+import 'movie_detail_state.dart';
 
-import 'package:movies_database/src/resources/remote_repository.dart';
-import 'package:rxdart/rxdart.dart';
-import '../models/trailer_model.dart';
+class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
+  final RemoteRepository repository;
 
-class MovieDetailBloc {
-  final RemoteRepository _repository;
-  final _movieId = PublishSubject<int>();
-  final _trailers = BehaviorSubject<Future<TrailerModel>>();
-
-  Function(int) get fetchTrailersById => _movieId.sink.add;
-
-  Stream<Future<TrailerModel>> get movieTrailers => _trailers.stream;
-
-  MovieDetailBloc(this._repository) {
-    _movieId.stream.transform(_itemTransformer()).pipe(_trailers);
-  }
-
-  dispose() async {
-    _movieId.close();
-    await _trailers.drain();
-    _trailers.close();
-  }
-
-  _itemTransformer() {
-    return ScanStreamTransformer(
-        (Future<TrailerModel>? trailer, int id, int index) async {
-      print(index);
-      trailer = _repository.fetchTrailers(id);
-      return trailer;
-    }, emptyFutureTrailerModel());
-  }
-
-  Future<TrailerModel> emptyFutureTrailerModel() async {
-    return TrailerModel();
+  MovieDetailBloc({required this.repository})
+      : super(MovieDetailLoadingState()) {
+    on<FetchMovieTrailerById>((event, emit) async {
+      try {
+        final trailer = await repository.fetchMovieTrailers(event.id);
+        emit(MovieDetailLoadedState(trailer: trailer));
+      } catch (_) {
+        emit(MovieDetailErrorState(message: _.toString()));
+      }
+    });
   }
 }

@@ -5,7 +5,7 @@ import '../models/trailer_model.dart';
 abstract class RemoteRepository {
   Future<ItemModel> fetchAllMovies();
 
-  Future<TrailerModel> fetchTrailers(int movieId);
+  Future<TrailerModel> fetchMovieTrailers(int movieId);
 
   Future<ItemModel> searchMoviesFromQuery(String query);
 }

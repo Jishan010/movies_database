@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import '../blocs/movie_detail_bloc_provider.dart';
 import '../models/trailer_model.dart';
 
 class MovieDetail extends StatefulWidget {
@@ -42,8 +39,6 @@ class MovieDetailState extends State<MovieDetail> {
   final String? voteAverage;
   final int? movieId;
 
-  late MovieDetailBloc bloc;
-
   MovieDetailState({
     this.title,
     this.posterUrl,
@@ -53,18 +48,6 @@ class MovieDetailState extends State<MovieDetail> {
     this.movieId,
   });
 
-  @override
-  void didChangeDependencies() {
-    bloc = MovieDetailBlocProvider.of(context);
-    bloc.fetchTrailersById(movieId!);
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,30 +122,6 @@ class MovieDetailState extends State<MovieDetail> {
                   ),
                 ),
                 Container(margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
-                StreamBuilder(
-                  stream: bloc.movieTrailers,
-                  builder:
-                      (context, AsyncSnapshot<Future<TrailerModel>> snapshot) {
-                    if (snapshot.hasData) {
-                      return FutureBuilder(
-                        future: snapshot.data,
-                        builder: (context,
-                            AsyncSnapshot<TrailerModel> itemSnapShot) {
-                          if (itemSnapShot.hasData) {
-                            if (itemSnapShot.data!.results.isNotEmpty)
-                              return trailerLayout(itemSnapShot.data);
-                            else
-                              return noTrailer(itemSnapShot.data);
-                          } else {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                        },
-                      );
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
               ],
             ),
           ),

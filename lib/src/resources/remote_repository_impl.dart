@@ -14,7 +14,7 @@ class RemoteRepositoryImpl extends RemoteRepository {
   Future<ItemModel> fetchAllMovies() => _moviesApiDataSource.fetchMovieList();
 
   @override
-  Future<TrailerModel> fetchTrailers(int movieId) =>
+  Future<TrailerModel> fetchMovieTrailers(int movieId) =>
       _moviesApiDataSource.fetchTrailer(movieId);
 
   @override

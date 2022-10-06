@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../blocs/movie_detail_bloc_provider.dart';
-import '../di/locator.dart';
 import '../models/item_model.dart';
-import '../resources/remote_repository.dart';
 import 'movie_card_container.dart';
 import 'movie_detail.dart';
 
@@ -23,9 +19,7 @@ class MovieListScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MovieDetailBlocProvider(
-                  repository: getIt<RemoteRepository>(),
-                  child: MovieDetail(
+                builder: (context) => MovieDetail(
                     title: listOfmovies.results[index].title,
                     posterUrl: listOfmovies.results[index].backdropPath,
                     description: listOfmovies.results[index].overview,
@@ -35,7 +29,6 @@ class MovieListScreen extends StatelessWidget {
                     movieId: listOfmovies.results[index].id,
                   ),
                 ),
-              ),
             );
           },
           child: MovieCardContainer(

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import '../models/item_model.dart';
 import 'package:equatable/equatable.dart';
 
