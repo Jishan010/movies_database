@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 abstract class MovieDetailEvent extends Equatable {}
 
 class FetchMovieTrailerById extends MovieDetailEvent {
-  final int id;
+  final int? id;
   FetchMovieTrailerById({required this.id});
 
   @override

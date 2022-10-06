@@ -25,7 +25,7 @@ class _$MovieApiService extends MovieApiService {
   }
 
   @override
-  Future<Response<dynamic>> getMovieDetails(int movieId, String apiKey) {
+  Future<Response<dynamic>> getMovieDetails(int? movieId, String apiKey) {
     final $url = '/movie/${movieId}/videos';
     final $params = <String, dynamic>{'api_key': apiKey};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);

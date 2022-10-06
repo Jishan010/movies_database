@@ -25,7 +25,7 @@ class MovieApiDataSource {
     }
   }
 
-  Future<TrailerModel> fetchTrailer(int movieId) async {
+  Future<TrailerModel> fetchTrailer(int? movieId) async {
     final response = await service.getMovieDetails(movieId, _apiKey);
     print(response.body);
     if (response.statusCode == 200) {

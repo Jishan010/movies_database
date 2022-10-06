@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:movies_database/src/blocs/movie_detail_bloc.dart';
+import 'package:movies_database/src/blocs/movie_detail_state.dart';
+import 'package:movies_database/src/di/locator.dart';
+import '../blocs/movie_detail_event.dart';
 import '../models/trailer_model.dart';
+import '../resources/remote_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetail extends StatefulWidget {
   final posterUrl;
@@ -9,7 +17,8 @@ class MovieDetail extends StatefulWidget {
   final String? voteAverage;
   final int? movieId;
 
-  const MovieDetail({Key? key,
+  const MovieDetail({
+    Key? key,
     this.title,
     this.posterUrl,
     this.description,
@@ -32,6 +41,9 @@ class MovieDetail extends StatefulWidget {
 }
 
 class MovieDetailState extends State<MovieDetail> {
+  MovieDetailBloc movieDetailBloc =
+      MovieDetailBloc(repository: getIt<RemoteRepository>());
+
   final posterUrl;
   final description;
   final releaseDate;
@@ -48,81 +60,115 @@ class MovieDetailState extends State<MovieDetail> {
     this.movieId,
   });
 
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        top: false,
-        bottom: false,
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                expandedHeight: 200.0,
-                floating: false,
-                pinned: true,
-                elevation: 0.0,
-                flexibleSpace: FlexibleSpaceBar(
-                    background: Image.network(
-                  "https://image.tmdb.org/t/p/w500$posterUrl",
-                  fit: BoxFit.cover,
-                )),
-              ),
-            ];
-          },
-          body: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(margin: const EdgeInsets.only(top: 5.0)),
-                Text(
-                  title ?? "",
-                  style: const TextStyle(
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return BlocProvider(
+      create: (context) =>
+          movieDetailBloc..add(FetchMovieTrailerById(id: movieId)),
+      child: Scaffold(
+        body: SafeArea(
+          top: false,
+          bottom: false,
+          child: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  expandedHeight: 200.0,
+                  floating: false,
+                  pinned: true,
+                  elevation: 0.0,
+                  flexibleSpace: FlexibleSpaceBar(
+                      background: Image.network(
+                    "https://image.tmdb.org/t/p/w500$posterUrl",
+                    fit: BoxFit.cover,
+                  )),
                 ),
-                Container(margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
-                Row(
+              ];
+            },
+            body: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 1.0, right: 1.0),
-                    ),
+                    Container(margin: const EdgeInsets.only(top: 5.0)),
                     Text(
-                      voteAverage ?? "",
+                      title ?? "",
                       style: const TextStyle(
-                        fontSize: 18.0,
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                        margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
+                    Row(
+                      children: <Widget>[
+                        const Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 1.0, right: 1.0),
+                        ),
+                        Text(
+                          voteAverage ?? "",
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                        ),
+                        Text(
+                          releaseDate,
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      releaseDate,
-                      style: const TextStyle(
-                        fontSize: 18.0,
+                    Container(
+                        margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
+                    Text(description),
+                    Container(
+                        margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
+                    const Text(
+                      "Trailer",
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 3,
+                      margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                      child:
+                          BlocBuilder<MovieDetailBloc, MovieTrailerDetailState>(
+                        builder: (context, state) {
+                          if (state is MovieTrailerDetailLoadingState) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (state is MovieTrailerDetailLoadedState) {
+                            return state.trailer.results.isNotEmpty
+                                ? trailerLayout(state.trailer)
+                                : noTrailer();
+                          } else if (state is MovieTrailerDetailErrorState) {
+                            return const Center(
+                              child: Text("Error"),
+                            );
+                          } else {
+                            return const Center(
+                              child: Text("Error"),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ],
                 ),
-                Container(margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
-                Text(description),
-                Container(margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
-                const Text(
-                  "Trailer",
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(margin: const EdgeInsets.only(top: 8.0, bottom: 8.0)),
-              ],
+              ),
             ),
           ),
         ),
@@ -130,7 +176,7 @@ class MovieDetailState extends State<MovieDetail> {
     );
   }
 
-  Widget noTrailer(TrailerModel? data) {
+  Widget noTrailer() {
     return Center(
       child: Container(
         child: const Text("No trailer available"),
@@ -140,12 +186,7 @@ class MovieDetailState extends State<MovieDetail> {
 
   Widget trailerLayout(TrailerModel? data) {
     if (data!.results.length > 1) {
-      return Row(
-        children: <Widget>[
-          trailerItem(data, 0),
-          trailerItem(data, 1),
-        ],
-      );
+      return trailerItem(data, 0);
     } else {
       return Row(
         children: <Widget>[
@@ -161,9 +202,29 @@ class MovieDetailState extends State<MovieDetail> {
         children: <Widget>[
           Container(
             margin: const EdgeInsets.all(5.0),
-            height: 100.0,
+            height: 200.0,
             color: Colors.grey,
-            child: const Center(child: Icon(Icons.play_circle_filled)),
+            child: Stack(
+              children: [
+                const Icon(Icons.play_circle_filled),
+                YoutubePlayer(
+                  controller:
+                      getYouTubePlayerController(data?.results[index].key),
+                  showVideoProgressIndicator: true,
+                  thumbnail: Image.network(
+                    "https://img.youtube.com/vi/${data?.results[index].key}/0.jpg",
+                    fit: BoxFit.cover,
+                  ),
+                  onReady: () {
+                    getYouTubePlayerController(data?.results[index].key).addListener(() {
+                        SystemChrome.setPreferredOrientations([
+                          DeviceOrientation.portraitUp,
+                          DeviceOrientation.portraitDown,
+                        ]);
+                    });
+                    })
+              ],
+            ),
           ),
           Text(
             data?.results[index].name ?? "",
@@ -171,6 +232,16 @@ class MovieDetailState extends State<MovieDetail> {
             overflow: TextOverflow.ellipsis,
           ),
         ],
+      ),
+    );
+  }
+
+  YoutubePlayerController getYouTubePlayerController(String? videoIdKey) {
+    return YoutubePlayerController(
+      initialVideoId: videoIdKey!,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
       ),
     );
   }

@@ -3,17 +3,17 @@ import '../resources/remote_repository.dart';
 import 'movie_detail_event.dart';
 import 'movie_detail_state.dart';
 
-class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
+class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieTrailerDetailState> {
   final RemoteRepository repository;
 
   MovieDetailBloc({required this.repository})
-      : super(MovieDetailLoadingState()) {
+      : super(MovieTrailerDetailLoadingState()) {
     on<FetchMovieTrailerById>((event, emit) async {
       try {
         final trailer = await repository.fetchMovieTrailers(event.id);
-        emit(MovieDetailLoadedState(trailer: trailer));
+        emit(MovieTrailerDetailLoadedState(trailer: trailer));
       } catch (_) {
-        emit(MovieDetailErrorState(message: _.toString()));
+        emit(MovieTrailerDetailErrorState(message: _.toString()));
       }
     });
   }

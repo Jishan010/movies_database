@@ -4,29 +4,29 @@ import 'package:flutter/foundation.dart';
 import '../models/trailer_model.dart';
 
 @immutable
-abstract class MovieDetailState extends Equatable {}
+abstract class MovieTrailerDetailState extends Equatable {}
 
 //for initial state
-class MovieDetailLoadingState extends MovieDetailState {
+class MovieTrailerDetailLoadingState extends MovieTrailerDetailState {
   @override
   List<Object?> get props => [];
 }
 
 //when movies are fetched successfully
-class MovieDetailLoadedState extends MovieDetailState {
+class MovieTrailerDetailLoadedState extends MovieTrailerDetailState {
   final TrailerModel trailer;
 
-  MovieDetailLoadedState({required this.trailer});
+  MovieTrailerDetailLoadedState({required this.trailer});
 
   @override
   List<Object?> get props => [trailer];
 }
 
 //for moview detail error handling
-class MovieDetailErrorState extends MovieDetailState {
+class MovieTrailerDetailErrorState extends MovieTrailerDetailState {
   final String message;
 
-  MovieDetailErrorState({required this.message});
+  MovieTrailerDetailErrorState({required this.message});
 
   @override
   List<Object?> get props => [message];
