@@ -50,7 +50,7 @@ class MovieDetailState extends State<MovieDetail> {
       repository: getIt<RemoteRepository>(),
       localRepository: getIt<LocalRepository>());
 
-  final posterUrl;
+  final String? posterUrl;
   final description;
   final releaseDate;
   final String? title;
@@ -87,24 +87,39 @@ class MovieDetailState extends State<MovieDetail> {
                   pinned: true,
                   elevation: 0.0,
                   flexibleSpace: FlexibleSpaceBar(
-                      background: Image.network(
-                    "https://image.tmdb.org/t/p/w500$posterUrl",
-                    fit: BoxFit.cover,
+                      background: Hero(
+                    tag: "moviePoster$movieId",
+                    child: Image.network(
+                      "https://image.tmdb.org/t/p/w500$posterUrl",
+                      fit: BoxFit.cover,
+                    ),
                   )),
                   actions: [
-                    IconButton(
-                        onPressed: () {
-                          //add to favorite
-                          movieDetailBloc.add(AddToFavEvent(
-                              favMovies: FavMovies(
-                                  id: movieId!,
-                                  title: title!,
-                                  posterPath: posterUrl,
-                                  description: description,
-                                  releaseDate: releaseDate,
-                                  originalLanguage: originalLanguage!)));
-                        },
-                        icon: const Icon(Icons.favorite_border))
+                    BlocBuilder<MovieDetailBloc, MovieTrailerDetailState>(
+                      builder: (context, state) {
+                        if (state is AddToFavSuccsessState) {
+                          return IconButton(
+                            icon: const Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              //add to favorite
+                              movieDetailBloc.add(AddToFavEvent(
+                                  favMovies: FavMovies(
+                                      id: movieId!,
+                                      title: title!,
+                                      posterPath: posterUrl!,
+                                      description: description,
+                                      releaseDate: releaseDate,
+                                      originalLanguage: originalLanguage!)));
+                            },
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    )
                   ],
                 ),
               ];

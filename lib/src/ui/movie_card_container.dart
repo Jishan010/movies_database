@@ -25,15 +25,18 @@ class MovieCardContainer extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(10.0),
       child: Stack(children: [
-        Card(
-          elevation: 5,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Colors.transparent, width: 1),
-            borderRadius: BorderRadius.circular(15.0),
+        Hero(
+          tag: "moviePoster$movieId",
+          child: Card(
+            elevation: 5,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            shape: RoundedRectangleBorder(
+              side: const BorderSide(color: Colors.transparent, width: 1),
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: posterUrl != null ? Image.network(
+              'https://image.tmdb.org/t/p/w500$posterUrl', fit: BoxFit.cover,) :  const Center(child: Text('No Image', style: TextStyle(color: Colors.white,background: null),)),
           ),
-          child: posterUrl != null ? Image.network(
-            'https://image.tmdb.org/t/p/w500$posterUrl', fit: BoxFit.cover,) :  const Center(child: Text('No Image', style: TextStyle(color: Colors.white,background: null),)),
         ),
         Container(
           alignment: Alignment.bottomCenter,
