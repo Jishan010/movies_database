@@ -82,6 +82,12 @@ class MovieDetailState extends State<MovieDetail> {
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 SliverAppBar(
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                   expandedHeight: 200.0,
                   floating: false,
                   pinned: true,
@@ -216,10 +222,8 @@ class MovieDetailState extends State<MovieDetail> {
   }
 
   Widget noTrailer() {
-    return Center(
-      child: Container(
-        child: const Text("No trailer available"),
-      ),
+    return const Center(
+      child: Text("No trailer available"),
     );
   }
 
