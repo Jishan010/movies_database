@@ -8,8 +8,8 @@ class FavMovies {
   final String posterPath;
   final String releaseDate;
   final String originalLanguage;
-  final int isFav;
+  final String description;
 
-  FavMovies(this.id, this.title, this.posterPath, this.releaseDate,
-      this.originalLanguage,this.isFav);
+  FavMovies({required this.id, required this.title, required this.posterPath, required this.releaseDate,
+      required this.originalLanguage,required this.description});
 }

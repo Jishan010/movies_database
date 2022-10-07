@@ -58,7 +58,7 @@ class MovieApiDataSource {
     if (favMovies != null) {
       return favMovies;
     } else {
-      return FavMovies(id, '', '', '', '', 0);
+      return FavMovies(id: id, title: "", posterPath: "", releaseDate: "", originalLanguage: "", description: "");
     }
   }
 
