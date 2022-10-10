@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:movies_database/src/blocs/movie_detail/movie_detail_bloc.dart';
 import 'package:movies_database/src/di/locator.dart';
 import '../blocs/add_to_fav/fav_bloc.dart';
+import '../blocs/add_to_fav/fav_event.dart';
 import '../blocs/movie_detail/movie_detail_event.dart';
 import '../blocs/movie_detail/movie_detail_state.dart';
+import '../database/fav_movies.dart';
 import '../models/trailer_model.dart';
 import '../resources/local_repository.dart';
 import '../resources/remote_repository.dart';
@@ -46,10 +48,6 @@ class MovieDetail extends StatefulWidget {
 }
 
 class MovieDetailState extends State<MovieDetail> {
-  MovieDetailBloc movieDetailBloc = MovieDetailBloc(
-      repository: getIt<RemoteRepository>(),
-      localRepository: getIt<LocalRepository>());
-
   final String? posterUrl;
   final description;
   final releaseDate;
@@ -74,7 +72,8 @@ class MovieDetailState extends State<MovieDetail> {
       providers: [
         BlocProvider<MovieDetailBloc>(
           create: (context) =>
-              MovieDetailBloc(repository: getIt<RemoteRepository>()),
+          MovieDetailBloc(repository: getIt<RemoteRepository>())
+            ..add(FetchMovieTrailerById(id: movieId)),
         ),
         BlocProvider<FavMovieBloc>(
           create: (context) =>
@@ -111,16 +110,24 @@ class MovieDetailState extends State<MovieDetail> {
                         ),
                       )),
                   actions: [
-                    BlocBuilder<MovieDetailBloc, MovieTrailerDetailState>(
-                      builder: (context, state) {
-                        return IconButton(
-                          icon: const Icon(
-                            Icons.favorite,
-                            color: Colors.red,
+                    IconButton(
+                      icon: const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        //add to favorite
+                        BlocProvider.of<FavMovieBloc>(context).add(
+                          AddToFavEvent(
+                            favMovies: FavMovies(
+                              id: movieId!,
+                              title: title!,
+                              posterPath: posterUrl!,
+                              description: description,
+                              releaseDate: releaseDate,
+                              originalLanguage: originalLanguage!,
+                            ),
                           ),
-                          onPressed: () {
-                            //add to favorite
-                          },
                         );
                       },
                     )
@@ -189,7 +196,9 @@ class MovieDetailState extends State<MovieDetail> {
                           .size
                           .height / 3,
                       margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child:BlocConsumer<MovieDetailBloc, MovieTrailerDetailState>(
+                      child: BlocConsumer<
+                          MovieDetailBloc,
+                          MovieTrailerDetailState>(
                         listener: (context, state) {
                           if (state is MovieTrailerDetailErrorState) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -227,8 +236,6 @@ class MovieDetailState extends State<MovieDetail> {
           ),
         ),
       ),
-    )
-    ,
     );
   }
 
