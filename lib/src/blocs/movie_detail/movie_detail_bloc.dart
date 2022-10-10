@@ -6,9 +6,8 @@ import 'movie_detail_state.dart';
 
 class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieTrailerDetailState> {
   final RemoteRepository repository;
-  final LocalRepository localRepository;
 
-  MovieDetailBloc({required this.repository, required this.localRepository})
+  MovieDetailBloc({required this.repository})
       : super(MovieTrailerDetailLoadingState()) {
     on<FetchMovieTrailerById>((event, emit) async {
       try {

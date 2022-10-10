@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movies_database/src/blocs/movie_detail/movie_detail_bloc.dart';
 import 'package:movies_database/src/di/locator.dart';
+import '../blocs/add_to_fav/fav_bloc.dart';
 import '../blocs/movie_detail/movie_detail_event.dart';
 import '../blocs/movie_detail/movie_detail_state.dart';
 import '../models/trailer_model.dart';
@@ -69,9 +70,19 @@ class MovieDetailState extends State<MovieDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          movieDetailBloc..add(FetchMovieTrailerById(id: movieId)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<MovieDetailBloc>(
+          create: (context) =>
+              MovieDetailBloc(repository: getIt<RemoteRepository>()),
+        ),
+        BlocProvider<FavMovieBloc>(
+          create: (context) =>
+              FavMovieBloc(
+                localRepository: getIt<LocalRepository>(),
+              ),
+        ),
+      ],
       child: Scaffold(
         body: SafeArea(
           top: false,
@@ -93,12 +104,12 @@ class MovieDetailState extends State<MovieDetail> {
                   elevation: 0.0,
                   flexibleSpace: FlexibleSpaceBar(
                       background: Hero(
-                    tag: "moviePoster$movieId",
-                    child: Image.network(
-                      "https://image.tmdb.org/t/p/w500$posterUrl",
-                      fit: BoxFit.cover,
-                    ),
-                  )),
+                        tag: "moviePoster$movieId",
+                        child: Image.network(
+                          "https://image.tmdb.org/t/p/w500$posterUrl",
+                          fit: BoxFit.cover,
+                        ),
+                      )),
                   actions: [
                     BlocBuilder<MovieDetailBloc, MovieTrailerDetailState>(
                       builder: (context, state) {
@@ -150,7 +161,7 @@ class MovieDetailState extends State<MovieDetail> {
                         ),
                         Container(
                           margin:
-                              const EdgeInsets.only(left: 10.0, right: 10.0),
+                          const EdgeInsets.only(left: 10.0, right: 10.0),
                         ),
                         Text(
                           releaseDate,
@@ -173,10 +184,21 @@ class MovieDetailState extends State<MovieDetail> {
                       ),
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height / 3,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 3,
                       margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child:
-                          BlocBuilder<MovieDetailBloc, MovieTrailerDetailState>(
+                      child:BlocConsumer<MovieDetailBloc, MovieTrailerDetailState>(
+                        listener: (context, state) {
+                          if (state is MovieTrailerDetailErrorState) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(state.message),
+                              ),
+                            );
+                          }
+                        },
                         builder: (context, state) {
                           if (state is MovieTrailerDetailLoadingState) {
                             return const Center(
@@ -205,6 +227,8 @@ class MovieDetailState extends State<MovieDetail> {
           ),
         ),
       ),
+    )
+    ,
     );
   }
 
@@ -242,10 +266,11 @@ class MovieDetailState extends State<MovieDetail> {
                     handleColor: Colors.amberAccent,
                   ),
                   controller:
-                      getYouTubePlayerController(data?.results[index].key),
+                  getYouTubePlayerController(data?.results[index].key),
                   showVideoProgressIndicator: true,
                   thumbnail: Image.network(
-                    "https://img.youtube.com/vi/${data?.results[index].key}/0.jpg",
+                    "https://img.youtube.com/vi/${data?.results[index]
+                        .key}/0.jpg",
                     fit: BoxFit.cover,
                   ),
                   onReady: () {
