@@ -18,23 +18,5 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieTrailerDetailState> {
         emit(MovieTrailerDetailErrorState(message: _.toString()));
       }
     });
-
-    on<AddToFavEvent>((event, emit) async {
-      try {
-        final favMovie = await localRepository.addMovieToFav(event.favMovies!);
-        emit(AddToFavSuccsessState(isAdded: favMovie));
-      } catch (_) {
-        emit(AddToFavErrorState(message: _.toString()));
-      }
-    });
-
-    on<RemoveFromFavEvent>((event, emit) async {
-      try {
-        final favMovie = await localRepository.removeMovieFromFav(event.movieId!);
-        emit(RemoveFromFavSuccsessState(isRemoved: favMovie));
-      } catch (_) {
-        emit(AddToFavErrorState(message: _.toString()));
-      }
-    });
   }
 }

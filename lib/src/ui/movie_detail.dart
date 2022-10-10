@@ -4,7 +4,6 @@ import 'package:movies_database/src/blocs/movie_detail/movie_detail_bloc.dart';
 import 'package:movies_database/src/di/locator.dart';
 import '../blocs/movie_detail/movie_detail_event.dart';
 import '../blocs/movie_detail/movie_detail_state.dart';
-import '../database/fav_movies.dart';
 import '../models/trailer_model.dart';
 import '../resources/local_repository.dart';
 import '../resources/remote_repository.dart';
@@ -103,27 +102,15 @@ class MovieDetailState extends State<MovieDetail> {
                   actions: [
                     BlocBuilder<MovieDetailBloc, MovieTrailerDetailState>(
                       builder: (context, state) {
-                        if (state is AddToFavSuccsessState) {
-                          return IconButton(
-                            icon: const Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              //add to favorite
-                              movieDetailBloc.add(AddToFavEvent(
-                                  favMovies: FavMovies(
-                                      id: movieId!,
-                                      title: title!,
-                                      posterPath: posterUrl!,
-                                      description: description,
-                                      releaseDate: releaseDate,
-                                      originalLanguage: originalLanguage!)));
-                            },
-                          );
-                        } else {
-                          return Container();
-                        }
+                        return IconButton(
+                          icon: const Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            //add to favorite
+                          },
+                        );
                       },
                     )
                   ],
