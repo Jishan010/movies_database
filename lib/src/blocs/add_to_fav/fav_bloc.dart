@@ -26,5 +26,17 @@ class FavMovieBloc extends Bloc<FavEvent, FavState> {
         emit(AddToFavErrorState(message: _.toString()));
       }
     });
+
+
+    on<CheckIfMovieIsFavEvent>((event, emit) async {
+      try {
+        final favMovie =
+            await localRepository.isFavMovie(event.movieId!);
+        emit(CheckIfMovieIsFavSuccsessState(isFav: favMovie));
+      } catch (_) {
+        emit(CheckIfMovieIsFavErrorState(message: _.toString()));
+      }
+    });
+
   }
 }

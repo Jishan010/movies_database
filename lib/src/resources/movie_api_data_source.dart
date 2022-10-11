@@ -53,13 +53,9 @@ class MovieApiDataSource {
   }
 
   //function to check if movie is fav
-  Future<FavMovies> isFavMovie(int? id) async {
+  Future<bool> isFavMovie(int? id) async {
     final favMovies = await favMoviesDao.findMovieById(id!);
-    if (favMovies != null) {
-      return favMovies;
-    } else {
-      return FavMovies(id: id, title: "", posterPath: "", releaseDate: "", originalLanguage: "", description: "");
-    }
+    return favMovies != null;
   }
 
   //function to add movie to fav

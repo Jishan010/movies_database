@@ -13,7 +13,7 @@ class LocalRepositoryImpl extends LocalRepository {
   }
 
   @override
-  Future<FavMovies> isFavMovie(int? id) {
+  Future<bool> isFavMovie(int? id) {
     return _moviesApiDataSource.isFavMovie(id);
   }
 

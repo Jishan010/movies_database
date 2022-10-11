@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:movies_database/src/blocs/add_to_fav/fav_state.dart';
 import 'package:movies_database/src/blocs/movie_detail/movie_detail_bloc.dart';
 import 'package:movies_database/src/di/locator.dart';
 import '../blocs/add_to_fav/fav_bloc.dart';
@@ -72,14 +73,13 @@ class MovieDetailState extends State<MovieDetail> {
       providers: [
         BlocProvider<MovieDetailBloc>(
           create: (context) =>
-          MovieDetailBloc(repository: getIt<RemoteRepository>())
-            ..add(FetchMovieTrailerById(id: movieId)),
+              MovieDetailBloc(repository: getIt<RemoteRepository>())
+                ..add(FetchMovieTrailerById(id: movieId)),
         ),
         BlocProvider<FavMovieBloc>(
-          create: (context) =>
-              FavMovieBloc(
-                localRepository: getIt<LocalRepository>(),
-              ),
+          create: (context) => FavMovieBloc(
+            localRepository: getIt<LocalRepository>(),
+          )..add(CheckIfMovieIsFavEvent(movieId: movieId)),
         ),
       ],
       child: Scaffold(
@@ -103,34 +103,69 @@ class MovieDetailState extends State<MovieDetail> {
                   elevation: 0.0,
                   flexibleSpace: FlexibleSpaceBar(
                       background: Hero(
-                        tag: "moviePoster$movieId",
-                        child: Image.network(
-                          "https://image.tmdb.org/t/p/w500$posterUrl",
-                          fit: BoxFit.cover,
-                        ),
-                      )),
+                    tag: "moviePoster$movieId",
+                    child: Image.network(
+                      "https://image.tmdb.org/t/p/w500$posterUrl",
+                      fit: BoxFit.cover,
+                    ),
+                  )),
                   actions: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        //add to favorite
-                        BlocProvider.of<FavMovieBloc>(context).add(
-                          AddToFavEvent(
-                            favMovies: FavMovies(
+                    BlocConsumer<FavMovieBloc, FavState>(
+                        listener: (context, state) {
+                      if (state is AddToFavSuccsessState) {
+                        BlocProvider.of<FavMovieBloc>(context)
+                            .add(CheckIfMovieIsFavEvent(movieId: movieId));
+                      } else {
+                        BlocProvider.of<FavMovieBloc>(context)
+                            .add(CheckIfMovieIsFavEvent(movieId: movieId));
+                      }
+                    }, builder: (context, state) {
+                      if (state is CheckIfMovieIsFavSuccsessState) {
+                        if (state.isFav) {
+                          return IconButton(
+                            icon: Icon(Icons.bookmark),
+                            onPressed: () {
+                              BlocProvider.of<FavMovieBloc>(context)
+                                  .add(RemoveFromFavEvent(movieId: movieId));
+                            },
+                          );
+                        } else {
+                          return IconButton(
+                            icon: Icon(Icons.bookmark_add_outlined),
+                            onPressed: () {
+                              BlocProvider.of<FavMovieBloc>(context)
+                                  .add(AddToFavEvent(
+                                      favMovies: FavMovies(
+                                id: movieId!,
+                                title: title!,
+                                posterPath: posterUrl!,
+                                description: description,
+                                releaseDate: releaseDate,
+                                originalLanguage: originalLanguage!,
+                              )));
+                            },
+                          );
+                        }
+                      } else if (state is CheckIfMovieIsFavErrorState) {
+                        return IconButton(
+                          icon: Icon(Icons.bookmark_add_outlined),
+                          onPressed: () {
+                            BlocProvider.of<FavMovieBloc>(context)
+                                .add(AddToFavEvent(
+                                    favMovies: FavMovies(
                               id: movieId!,
                               title: title!,
                               posterPath: posterUrl!,
                               description: description,
                               releaseDate: releaseDate,
                               originalLanguage: originalLanguage!,
-                            ),
-                          ),
+                            )));
+                          },
                         );
-                      },
-                    )
+                      } else {
+                        return Container();
+                      }
+                    }),
                   ],
                 ),
               ];
@@ -168,7 +203,7 @@ class MovieDetailState extends State<MovieDetail> {
                         ),
                         Container(
                           margin:
-                          const EdgeInsets.only(left: 10.0, right: 10.0),
+                              const EdgeInsets.only(left: 10.0, right: 10.0),
                         ),
                         Text(
                           releaseDate,
@@ -191,13 +226,9 @@ class MovieDetailState extends State<MovieDetail> {
                       ),
                     ),
                     Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height / 3,
+                      height: MediaQuery.of(context).size.height / 3,
                       margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: BlocConsumer<
-                          MovieDetailBloc,
+                      child: BlocConsumer<MovieDetailBloc,
                           MovieTrailerDetailState>(
                         listener: (context, state) {
                           if (state is MovieTrailerDetailErrorState) {
@@ -273,11 +304,10 @@ class MovieDetailState extends State<MovieDetail> {
                     handleColor: Colors.amberAccent,
                   ),
                   controller:
-                  getYouTubePlayerController(data?.results[index].key),
+                      getYouTubePlayerController(data?.results[index].key),
                   showVideoProgressIndicator: true,
                   thumbnail: Image.network(
-                    "https://img.youtube.com/vi/${data?.results[index]
-                        .key}/0.jpg",
+                    "https://img.youtube.com/vi/${data?.results[index].key}/0.jpg",
                     fit: BoxFit.cover,
                   ),
                   onReady: () {
