@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Index 0: Home',
+      'Home',
       style: optionStyle,
     ),
     Text(
@@ -120,8 +120,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           return const Center(
                               child: CircularProgressIndicator());
                         } else if (state is MoviesLoadedState) {
-                          return MovieListScreen(
-                            listOfmovies: state.listOfmovies,
+                          return Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.black87,
+                            ),
+                            child: MovieListScreen(
+                              listOfmovies: state.listOfmovies,
+                            ),
                           );
                         } else if (state is MoviesErrorState) {
                           return const Center(

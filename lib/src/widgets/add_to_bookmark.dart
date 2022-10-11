@@ -29,7 +29,7 @@ class AddToBookmark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.bookmark_add_outlined),
+      icon: const Icon(Icons.bookmark_add_outlined),
       onPressed: () {
         BlocProvider.of<FavMovieBloc>(context).add(AddToFavEvent(
             favMovies: FavMovies(
