@@ -7,12 +7,11 @@ import '../blocs/add_to_fav/fav_bloc.dart';
 import '../blocs/add_to_fav/fav_event.dart';
 import '../blocs/movie_detail/movie_detail_event.dart';
 import '../blocs/movie_detail/movie_detail_state.dart';
-import '../database/fav_movies.dart';
-import '../models/trailer_model.dart';
 import '../resources/local_repository.dart';
 import '../resources/remote_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import '../widgets/add_to_bookmark.dart';
+import '../widgets/trailer_layout.dart';
 
 class MovieDetail extends StatefulWidget {
   final posterUrl;
@@ -123,45 +122,29 @@ class MovieDetailState extends State<MovieDetail> {
                       if (state is CheckIfMovieIsFavSuccsessState) {
                         if (state.isFav) {
                           return IconButton(
-                            icon: Icon(Icons.bookmark),
+                            icon: const Icon(Icons.bookmark),
                             onPressed: () {
                               BlocProvider.of<FavMovieBloc>(context)
                                   .add(RemoveFromFavEvent(movieId: movieId));
                             },
                           );
                         } else {
-                          return IconButton(
-                            icon: Icon(Icons.bookmark_add_outlined),
-                            onPressed: () {
-                              BlocProvider.of<FavMovieBloc>(context)
-                                  .add(AddToFavEvent(
-                                      favMovies: FavMovies(
-                                id: movieId!,
-                                title: title!,
-                                posterPath: posterUrl!,
-                                description: description,
-                                releaseDate: releaseDate,
-                                originalLanguage: originalLanguage!,
-                              )));
-                            },
-                          );
-                        }
-                      } else if (state is CheckIfMovieIsFavErrorState) {
-                        return IconButton(
-                          icon: Icon(Icons.bookmark_add_outlined),
-                          onPressed: () {
-                            BlocProvider.of<FavMovieBloc>(context)
-                                .add(AddToFavEvent(
-                                    favMovies: FavMovies(
-                              id: movieId!,
-                              title: title!,
-                              posterPath: posterUrl!,
+                          return AddToBookmark(
+                              movieId: movieId,
+                              title: title,
+                              posterUrl: posterUrl,
                               description: description,
                               releaseDate: releaseDate,
-                              originalLanguage: originalLanguage!,
-                            )));
-                          },
-                        );
+                              originalLanguage: originalLanguage);
+                        }
+                      } else if (state is CheckIfMovieIsFavErrorState) {
+                        return AddToBookmark(
+                            movieId: movieId,
+                            title: title,
+                            posterUrl: posterUrl,
+                            description: description,
+                            releaseDate: releaseDate,
+                            originalLanguage: originalLanguage);
                       } else {
                         return Container();
                       }
@@ -246,7 +229,9 @@ class MovieDetailState extends State<MovieDetail> {
                             );
                           } else if (state is MovieTrailerDetailLoadedState) {
                             return state.trailer.results.isNotEmpty
-                                ? trailerLayout(state.trailer)
+                                ? TrailerLayout(
+                                    data: state.trailer,
+                                  )
                                 : noTrailer();
                           } else if (state is MovieTrailerDetailErrorState) {
                             return const Center(
@@ -273,75 +258,6 @@ class MovieDetailState extends State<MovieDetail> {
   Widget noTrailer() {
     return const Center(
       child: Text("No trailer available"),
-    );
-  }
-
-  Widget trailerLayout(TrailerModel? data) {
-    if (data!.results.length > 1) {
-      return trailerItem(data, 0);
-    } else {
-      return Row(
-        children: <Widget>[
-          trailerItem(data, 0),
-        ],
-      );
-    }
-  }
-
-  trailerItem(TrailerModel? data, int index) {
-    return Column(
-      children: <Widget>[
-        Container(
-          margin: const EdgeInsets.all(5.0),
-          height: 200.0,
-          child: Stack(
-            children: [
-              const Icon(Icons.play_circle_filled),
-              YoutubePlayer(
-                  progressIndicatorColor: Colors.amber,
-                  progressColors: const ProgressBarColors(
-                    playedColor: Colors.amber,
-                    handleColor: Colors.amberAccent,
-                  ),
-                  controller:
-                      getYouTubePlayerController(data?.results[index].key),
-                  showVideoProgressIndicator: true,
-                  thumbnail: Image.network(
-                    "https://img.youtube.com/vi/${data?.results[index].key}/0.jpg",
-                    fit: BoxFit.cover,
-                  ),
-                  onReady: () {
-                    getYouTubePlayerController(data?.results[index].key)
-                        .addListener(() {
-                      SystemChrome.setPreferredOrientations([
-                        DeviceOrientation.portraitUp,
-                        DeviceOrientation.portraitDown,
-                      ]);
-                    });
-                  })
-            ],
-          ),
-        ),
-        Text(
-          data?.results[index].name ?? "",
-          maxLines: 1,
-          style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
-    );
-  }
-
-  YoutubePlayerController getYouTubePlayerController(String? videoIdKey) {
-    return YoutubePlayerController(
-      initialVideoId: videoIdKey!,
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-      ),
     );
   }
 }

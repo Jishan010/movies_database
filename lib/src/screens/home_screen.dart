@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/di/locator.dart';
-import 'package:movies_database/src/ui/search_movie.dart';
+import 'package:movies_database/src/screens/search_movie.dart';
 import '../blocs/movies/movies_event.dart';
 import '../blocs/movies/movies_list_bloc.dart';
 import '../blocs/movies/movies_state.dart';

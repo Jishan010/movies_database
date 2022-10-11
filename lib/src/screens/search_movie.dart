@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_database/src/ui/movie_list.dart';
 import '../blocs/movies/movies_event.dart';
 import '../blocs/movies/movies_list_bloc.dart';
 import '../blocs/movies/movies_state.dart';
 import '../di/locator.dart';
 import '../resources/remote_repository.dart';
+import 'movie_list.dart';
 
 class SearchMovie extends StatefulWidget {
   const SearchMovie({Key? key}) : super(key: key);

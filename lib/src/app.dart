@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movies_database/src/database/fav_movies_dao.dart';
-import 'ui/home_screen.dart';
+import 'package:movies_database/src/screens/home_screen.dart';
 
 class App extends StatelessWidget {
 
@@ -13,7 +12,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: Scaffold(
+      home: const Scaffold(
         body: HomeScreen(),
       ),
     );
