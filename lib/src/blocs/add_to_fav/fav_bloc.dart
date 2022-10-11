@@ -38,5 +38,14 @@ class FavMovieBloc extends Bloc<FavEvent, FavState> {
       }
     });
 
+    on<FetchFavMoviesEvent>((event, emit) async {
+      try {
+        final favMovies = await localRepository.fetchFavMoviesFromDatabase();
+        emit(FetchFavMoviesSuccessState(favMovies: favMovies));
+      } catch (_) {
+        emit(FetchFavMoviesFailureState(message: _.toString()));
+      }
+    });
+
   }
 }

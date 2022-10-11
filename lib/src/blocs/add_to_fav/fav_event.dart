@@ -6,6 +6,11 @@ import '../../database/fav_movies.dart';
 @immutable
 abstract class FavEvent extends Equatable {}
 
+class FetchFavMoviesEvent extends FavEvent {
+  @override
+  List<Object?> get props => [];
+}
+
 class AddToFavEvent extends FavEvent {
   final FavMovies? favMovies;
 

@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../database/fav_movies.dart';
@@ -14,6 +13,8 @@ class AddToBookmark extends StatelessWidget {
     required this.description,
     required this.releaseDate,
     required this.originalLanguage,
+    required this.backdropPath,
+    required this.voteAverage,
   }) : super(key: key);
 
   final int? movieId;
@@ -22,6 +23,8 @@ class AddToBookmark extends StatelessWidget {
   final String? description;
   final String? releaseDate;
   final String? originalLanguage;
+  final String? backdropPath;
+  final double? voteAverage;
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +33,15 @@ class AddToBookmark extends StatelessWidget {
       onPressed: () {
         BlocProvider.of<FavMovieBloc>(context).add(AddToFavEvent(
             favMovies: FavMovies(
-              id: movieId!,
-              title: title!,
-              posterPath: posterUrl!,
-              description: description!,
-              releaseDate: releaseDate!,
-              originalLanguage: originalLanguage!,
-            )));
+          id: movieId!,
+          title: title!,
+          posterPath: posterUrl!,
+          description: description!,
+          releaseDate: releaseDate!,
+          originalLanguage: originalLanguage!,
+          backdropPath: backdropPath!,
+          voteAverage: voteAverage!,
+        )));
       },
     );
   }

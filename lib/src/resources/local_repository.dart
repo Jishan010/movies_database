@@ -1,7 +1,7 @@
 import '../database/fav_movies.dart';
 
 abstract class LocalRepository {
-  Future<List<FavMovies>> fetchAllMoviesFromDatabase();
+  Future<List<FavMovies>> fetchFavMoviesFromDatabase();
 
   Future<bool> isFavMovie(int? id);
 

@@ -18,9 +18,10 @@ class MovieDetail extends StatefulWidget {
   final description;
   final releaseDate;
   final String? title;
-  final String? voteAverage;
+  final double? voteAverage;
   final String? originalLanguage;
   final int? movieId;
+  final String? backdropPath;
 
   const MovieDetail({
     Key? key,
@@ -31,6 +32,7 @@ class MovieDetail extends StatefulWidget {
     this.voteAverage,
     this.originalLanguage = 'en',
     this.movieId,
+    this.backdropPath,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class MovieDetail extends StatefulWidget {
       voteAverage: voteAverage,
       movieId: movieId,
       originalLanguage: originalLanguage,
+      backdropPath: backdropPath,
     );
   }
 }
@@ -52,9 +55,10 @@ class MovieDetailState extends State<MovieDetail> {
   final description;
   final releaseDate;
   final String? title;
-  final String? voteAverage;
+  final double? voteAverage;
   final int? movieId;
   final String? originalLanguage;
+  final String? backdropPath;
 
   MovieDetailState({
     this.title,
@@ -64,6 +68,7 @@ class MovieDetailState extends State<MovieDetail> {
     this.voteAverage,
     this.movieId,
     this.originalLanguage = 'en',
+    this.backdropPath,
   });
 
   @override
@@ -104,7 +109,7 @@ class MovieDetailState extends State<MovieDetail> {
                       background: Hero(
                     tag: "moviePoster$movieId",
                     child: Image.network(
-                      "https://image.tmdb.org/t/p/w500$posterUrl",
+                      "https://image.tmdb.org/t/p/w500$backdropPath",
                       fit: BoxFit.cover,
                     ),
                   )),
@@ -135,7 +140,9 @@ class MovieDetailState extends State<MovieDetail> {
                               posterUrl: posterUrl,
                               description: description,
                               releaseDate: releaseDate,
-                              originalLanguage: originalLanguage);
+                              originalLanguage: originalLanguage,
+                              voteAverage: voteAverage,
+                              backdropPath: backdropPath);
                         }
                       } else if (state is CheckIfMovieIsFavErrorState) {
                         return AddToBookmark(
@@ -144,7 +151,9 @@ class MovieDetailState extends State<MovieDetail> {
                             posterUrl: posterUrl,
                             description: description,
                             releaseDate: releaseDate,
-                            originalLanguage: originalLanguage);
+                            originalLanguage: originalLanguage,
+                            voteAverage: voteAverage,
+                            backdropPath: backdropPath);
                       } else {
                         return Container();
                       }
@@ -179,7 +188,9 @@ class MovieDetailState extends State<MovieDetail> {
                           margin: const EdgeInsets.only(left: 1.0, right: 1.0),
                         ),
                         Text(
-                          voteAverage ?? "",
+                          voteAverage != null
+                              ? voteAverage.toString()
+                              : "0.0",
                           style: const TextStyle(
                             fontSize: 18.0,
                           ),

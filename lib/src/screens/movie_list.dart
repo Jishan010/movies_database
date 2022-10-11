@@ -6,7 +6,8 @@ import 'movie_detail.dart';
 class MovieListScreen extends StatelessWidget {
   final ItemModel listOfmovies;
 
-  const MovieListScreen({Key? key, required this.listOfmovies}) : super(key: key);
+  const MovieListScreen({Key? key, required this.listOfmovies})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +21,18 @@ class MovieListScreen extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => MovieDetail(
-                    title: listOfmovies.results[index].title,
-                    posterUrl: listOfmovies.results[index].backdropPath,
-                    description: listOfmovies.results[index].overview,
-                    releaseDate: listOfmovies.results[index].releaseDate,
-                    voteAverage:
-                        listOfmovies.results[index].voteAverage.toString(),
-                    movieId: listOfmovies.results[index].id,
-                  ),
+                  title: listOfmovies.results[index].title,
+                  posterUrl: listOfmovies.results[index].posterPath,
+                  description: listOfmovies.results[index].overview,
+                  releaseDate: listOfmovies.results[index].releaseDate,
+                  voteAverage:
+                      listOfmovies.results[index].voteAverage,
+                  movieId: listOfmovies.results[index].id,
+                  backdropPath: listOfmovies.results[index].backdropPath,
+                  originalLanguage:
+                      listOfmovies.results[index].originalLanguage,
                 ),
+              ),
             );
           },
           child: MovieCardContainer(

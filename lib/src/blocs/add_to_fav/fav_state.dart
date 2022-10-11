@@ -1,10 +1,28 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../database/fav_movies.dart';
 
 @immutable
 abstract class FavState extends Equatable {}
+
+class FetchFavMoviesSuccessState extends FavState {
+  final List<FavMovies> favMovies;
+
+  FetchFavMoviesSuccessState({required this.favMovies});
+
+  @override
+  List<Object?> get props => [favMovies];
+}
+
+class FetchFavMoviesFailureState extends FavState {
+  final String message;
+
+  FetchFavMoviesFailureState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
 
 class AddToFavStateLoading extends FavState {
   @override

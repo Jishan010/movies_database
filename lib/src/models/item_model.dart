@@ -125,7 +125,7 @@ class Result {
 
   String? get title => _title;
 
-  num? get voteAverage => _voteAverage;
+  double? get voteAverage => _voteAverage is int ? _voteAverage?.toDouble() : _voteAverage;
 
   bool? get video => _video;
 

@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `FavMovies` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `posterPath` TEXT NOT NULL, `releaseDate` TEXT NOT NULL, `originalLanguage` TEXT NOT NULL, `description` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `FavMovies` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `posterPath` TEXT NOT NULL, `releaseDate` TEXT NOT NULL, `originalLanguage` TEXT NOT NULL, `description` TEXT NOT NULL, `backdropPath` TEXT NOT NULL, `voteAverage` REAL NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -98,7 +98,7 @@ class _$AppDatabase extends AppDatabase {
 
 class _$FavMoviesDao extends FavMoviesDao {
   _$FavMoviesDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _favMoviesInsertionAdapter = InsertionAdapter(
             database,
             'FavMovies',
@@ -108,9 +108,10 @@ class _$FavMoviesDao extends FavMoviesDao {
                   'posterPath': item.posterPath,
                   'releaseDate': item.releaseDate,
                   'originalLanguage': item.originalLanguage,
-                  'description': item.description
-                },
-            changeListener),
+                  'description': item.description,
+                  'backdropPath': item.backdropPath,
+                  'voteAverage': item.voteAverage
+                }),
         _favMoviesUpdateAdapter = UpdateAdapter(
             database,
             'FavMovies',
@@ -121,9 +122,10 @@ class _$FavMoviesDao extends FavMoviesDao {
                   'posterPath': item.posterPath,
                   'releaseDate': item.releaseDate,
                   'originalLanguage': item.originalLanguage,
-                  'description': item.description
-                },
-            changeListener),
+                  'description': item.description,
+                  'backdropPath': item.backdropPath,
+                  'voteAverage': item.voteAverage
+                }),
         _favMoviesDeletionAdapter = DeletionAdapter(
             database,
             'FavMovies',
@@ -134,9 +136,10 @@ class _$FavMoviesDao extends FavMoviesDao {
                   'posterPath': item.posterPath,
                   'releaseDate': item.releaseDate,
                   'originalLanguage': item.originalLanguage,
-                  'description': item.description
-                },
-            changeListener);
+                  'description': item.description,
+                  'backdropPath': item.backdropPath,
+                  'voteAverage': item.voteAverage
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -151,46 +154,6 @@ class _$FavMoviesDao extends FavMoviesDao {
   final DeletionAdapter<FavMovies> _favMoviesDeletionAdapter;
 
   @override
-  Future<List<FavMovies>> findAllFavMovies() async {
-    return _queryAdapter.queryList('SELECT * FROM FavMovies',
-        mapper: (Map<String, Object?> row) => FavMovies(
-            id: row['id'] as int,
-            title: row['title'] as String,
-            posterPath: row['posterPath'] as String,
-            releaseDate: row['releaseDate'] as String,
-            originalLanguage: row['originalLanguage'] as String,
-            description: row['description'] as String));
-  }
-
-  @override
-  Future<FavMovies?> getMaxFavMovies() async {
-    return _queryAdapter.query(
-        'Select * from FavMovies order by id desc limit 1',
-        mapper: (Map<String, Object?> row) => FavMovies(
-            id: row['id'] as int,
-            title: row['title'] as String,
-            posterPath: row['posterPath'] as String,
-            releaseDate: row['releaseDate'] as String,
-            originalLanguage: row['originalLanguage'] as String,
-            description: row['description'] as String));
-  }
-
-  @override
-  Stream<List<FavMovies>> fetchStreamData() {
-    return _queryAdapter.queryListStream(
-        'SELECT * FROM FavMovies order by id desc',
-        mapper: (Map<String, Object?> row) => FavMovies(
-            id: row['id'] as int,
-            title: row['title'] as String,
-            posterPath: row['posterPath'] as String,
-            releaseDate: row['releaseDate'] as String,
-            originalLanguage: row['originalLanguage'] as String,
-            description: row['description'] as String),
-        queryableName: 'FavMovies',
-        isView: false);
-  }
-
-  @override
   Future<FavMovies?> findMovieById(int id) async {
     return _queryAdapter.query('SELECT * FROM FavMovies WHERE id = ?1',
         mapper: (Map<String, Object?> row) => FavMovies(
@@ -199,20 +162,24 @@ class _$FavMoviesDao extends FavMoviesDao {
             posterPath: row['posterPath'] as String,
             releaseDate: row['releaseDate'] as String,
             originalLanguage: row['originalLanguage'] as String,
-            description: row['description'] as String),
+            description: row['description'] as String,
+            backdropPath: row['backdropPath'] as String,
+            voteAverage: row['voteAverage'] as double),
         arguments: [id]);
   }
 
   @override
   Future<List<FavMovies>> findAllFavMoviesList() async {
-    return _queryAdapter.queryList('SELECT * FROM FavMovies where isFav = 1',
+    return _queryAdapter.queryList('SELECT * FROM FavMovies',
         mapper: (Map<String, Object?> row) => FavMovies(
             id: row['id'] as int,
             title: row['title'] as String,
             posterPath: row['posterPath'] as String,
             releaseDate: row['releaseDate'] as String,
             originalLanguage: row['originalLanguage'] as String,
-            description: row['description'] as String));
+            description: row['description'] as String,
+            backdropPath: row['backdropPath'] as String,
+            voteAverage: row['voteAverage'] as double));
   }
 
   @override
