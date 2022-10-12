@@ -12,9 +12,51 @@ class MovieApiDataSource {
 
   MovieApiDataSource(this.service, this.favMoviesDao);
 
-  Future<ItemModel> fetchMovieList() async {
+  Future<ItemModel> fetchPopularMovieList() async {
     print("entered");
     final response = await service.getPopularMovies(_apiKey);
+    print(response.body);
+    if (response.statusCode == 200) {
+      print("${response.statusCode}");
+      // If the call to the server was successful, parse the JSON
+      return ItemModel.fromJson(response.body);
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
+
+  Future<ItemModel> fetchNowPlayingMovies() async {
+    print("entered");
+    final response = await service.getNowPlayingMovies(_apiKey);
+    print(response.body);
+    if (response.statusCode == 200) {
+      print("${response.statusCode}");
+      // If the call to the server was successful, parse the JSON
+      return ItemModel.fromJson(response.body);
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
+
+  Future<ItemModel> fetchTopRatedMovies() async {
+    print("entered");
+    final response = await service.getTopRatedMovies(_apiKey);
+    print(response.body);
+    if (response.statusCode == 200) {
+      print("${response.statusCode}");
+      // If the call to the server was successful, parse the JSON
+      return ItemModel.fromJson(response.body);
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
+
+  Future<ItemModel> fetchUpcomingMovies() async {
+    print("entered");
+    final response = await service.getUpcomingMovies(_apiKey);
     print(response.body);
     if (response.statusCode == 200) {
       print("${response.statusCode}");

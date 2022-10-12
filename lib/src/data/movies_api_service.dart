@@ -25,6 +25,24 @@ abstract class MovieApiService extends ChopperService {
     @Query('api_key') String apiKey
   );
 
+  //fcuntion to get top rated movies
+  @Get(path: 'movie/top_rated')
+  Future<Response> getTopRatedMovies(
+    @Query('api_key') String apiKey
+  );
+
+  //function to get upcoming movies
+  @Get(path: 'movie/upcoming')
+  Future<Response> getUpcomingMovies(
+    @Query('api_key') String apiKey
+  );
+
+  //function to get now playing movies
+  @Get(path: 'movie/now_playing')
+  Future<Response> getNowPlayingMovies(
+    @Query('api_key') String apiKey
+  );
+
   @Get(path: 'movie/{movie_id}/videos')
   Future<Response> getMovieDetails(
     @Path('movie_id') int? movieId,

@@ -25,6 +25,30 @@ class _$MovieApiService extends MovieApiService {
   }
 
   @override
+  Future<Response<dynamic>> getTopRatedMovies(String apiKey) {
+    final $url = '/movie/top_rated';
+    final $params = <String, dynamic>{'api_key': apiKey};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> getUpcomingMovies(String apiKey) {
+    final $url = '/movie/upcoming';
+    final $params = <String, dynamic>{'api_key': apiKey};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> getNowPlayingMovies(String apiKey) {
+    final $url = '/movie/now_playing';
+    final $params = <String, dynamic>{'api_key': apiKey};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> getMovieDetails(int? movieId, String apiKey) {
     final $url = '/movie/${movieId}/videos';
     final $params = <String, dynamic>{'api_key': apiKey};

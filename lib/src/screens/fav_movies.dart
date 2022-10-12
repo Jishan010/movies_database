@@ -22,9 +22,9 @@ class _FavMoviesState extends State<FavMovies> {
 
   @override
   void initState() {
-     bloc = FavMovieBloc(localRepository: getIt<LocalRepository>())
+    bloc = FavMovieBloc(localRepository: getIt<LocalRepository>())
       ..add(FetchFavMoviesEvent());
-   _controller = TextEditingController();
+    _controller = TextEditingController();
     super.initState();
   }
 
@@ -50,51 +50,53 @@ class _FavMoviesState extends State<FavMovies> {
             ),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  color: Colors.black87,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.black87,
+                  ),
+                  height: MediaQuery.of(context).size.height - 60,
+                  child: BlocBuilder<FavMovieBloc, FavState>(
+                    builder: (context, state) {
+                      if (state is FetchFavMoviesSuccessState) {
+                        return MovieListScreen(
+                          listOfmovies: ItemModel(
+                            results: state.favMovies
+                                .map((e) => Result.mapFromDatabase(
+                                    id: e.id,
+                                    title: e.title,
+                                    posterPath: e.posterPath,
+                                    releaseDate: e.releaseDate,
+                                    overview: e.description,
+                                    voteAverage: e.voteAverage,
+                                    backdropPath: e.backdropPath,
+                                    originalLanguage: e.originalLanguage))
+                                .toList(),
+                          ),
+                        );
+                      } else if (state is FetchFavMoviesFailureState) {
+                        return Center(
+                          child: _controller.value.text.isEmpty
+                              ? const SizedBox()
+                              : const CircularProgressIndicator(),
+                        );
+                      } else if (state is MoviesErrorState) {
+                        return const Center(
+                          child: Text('Something went wrong!'),
+                        );
+                      } else {
+                        return const Center(
+                          child: Text('Something went wrong!'),
+                        );
+                      }
+                    },
+                  ),
                 ),
-                height: MediaQuery.of(context).size.height - 60,
-                child: BlocBuilder<FavMovieBloc, FavState>(
-                  builder: (context, state) {
-                    if (state is FetchFavMoviesSuccessState) {
-                      return MovieListScreen(
-                        listOfmovies: ItemModel(
-                          results: state.favMovies
-                              .map((e) => Result.mapFromDatabase(
-                                  id: e.id,
-                                  title: e.title,
-                                  posterPath: e.posterPath,
-                                  releaseDate: e.releaseDate,
-                                  overview: e.description,
-                                  voteAverage: e.voteAverage,
-                                  backdropPath: e.backdropPath,
-                                  originalLanguage: e.originalLanguage))
-                              .toList(),
-                        ),
-                      );
-                    } else if (state is FetchFavMoviesFailureState) {
-                      return Center(
-                        child: _controller.value.text.isEmpty
-                            ? const SizedBox()
-                            : const CircularProgressIndicator(),
-                      );
-                    } else if (state is MoviesErrorState) {
-                      return const Center(
-                        child: Text('Something went wrong!'),
-                      );
-                    } else {
-                      return const Center(
-                        child: Text('Something went wrong!'),
-                      );
-                    }
-                  },
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

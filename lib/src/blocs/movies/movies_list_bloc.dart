@@ -7,9 +7,36 @@ class MoviesListBloc extends Bloc<MoviesEvent, MoviesState> {
   final RemoteRepository repository;
 
   MoviesListBloc({required this.repository}) : super(MoviesLoadingState()) {
-    on<FetchMovies>((event, emit) async {
+    on<FetchPopulorMovies>((event, emit) async {
       try {
-        final movies = await repository.fetchAllMovies();
+        final movies = await repository.fetchPopularMovies();
+        emit(MoviesLoadedState(listOfmovies: movies));
+      } catch (_) {
+        emit(MoviesErrorState(message: _.toString()));
+      }
+    });
+
+    on<FetchTopRatedMovies>((event, emit) async {
+      try {
+        final movies = await repository.fetchTopRatedMovies();
+        emit(MoviesLoadedState(listOfmovies: movies));
+      } catch (_) {
+        emit(MoviesErrorState(message: _.toString()));
+      }
+    });
+
+    on<FetchUpcomingMovies>((event, emit) async {
+      try {
+        final movies = await repository.fetchUpcomingMovies();
+        emit(MoviesLoadedState(listOfmovies: movies));
+      } catch (_) {
+        emit(MoviesErrorState(message: _.toString()));
+      }
+    });
+
+    on<FetchNowPlayingMovies>((event, emit) async {
+      try {
+        final movies = await repository.fetchNowPlayingMovies();
         emit(MoviesLoadedState(listOfmovies: movies));
       } catch (_) {
         emit(MoviesErrorState(message: _.toString()));

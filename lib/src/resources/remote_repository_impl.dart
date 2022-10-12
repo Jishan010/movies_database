@@ -11,17 +11,23 @@ class RemoteRepositoryImpl extends RemoteRepository {
   RemoteRepositoryImpl(this._moviesApiDataSource);
 
   @override
-  Future<ItemModel> fetchAllMovies() => _moviesApiDataSource.fetchMovieList();
+  Future<ItemModel> fetchPopularMovies() => _moviesApiDataSource.fetchPopularMovieList();
 
   @override
-  Future<TrailerModel> fetchMovieTrailers(int? movieId) =>
-      _moviesApiDataSource.fetchTrailer(movieId);
+  Future<ItemModel> fetchTopRatedMovies() => _moviesApiDataSource.fetchTopRatedMovies();
 
   @override
-  Future<ItemModel> searchMoviesFromQuery(String query) =>
-      _moviesApiDataSource.fetchMoviesBySearcgQuery(query);
+  Future<ItemModel> fetchUpcomingMovies() => _moviesApiDataSource.fetchUpcomingMovies();
 
   @override
-  Future<List<FavMovies>> fetchAllMoviesFromDatabase() =>
-      _moviesApiDataSource.fetchAllMoviesFromDatabase();
+  Future<TrailerModel> fetchMovieTrailers(int? movieId) => _moviesApiDataSource.fetchTrailer(movieId);
+
+  @override
+  Future<ItemModel> searchMoviesFromQuery(String query) => _moviesApiDataSource.fetchMoviesBySearcgQuery(query);
+
+  @override
+  Future<List<FavMovies>> fetchAllMoviesFromDatabase() => _moviesApiDataSource.fetchAllMoviesFromDatabase();
+
+  @override
+  Future<ItemModel> fetchNowPlayingMovies() => _moviesApiDataSource.fetchNowPlayingMovies();
 }

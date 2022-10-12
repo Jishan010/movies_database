@@ -4,7 +4,22 @@ import 'package:flutter/foundation.dart';
 @immutable
 abstract class MoviesEvent extends Equatable {}
 
-class FetchMovies extends MoviesEvent {
+class FetchPopulorMovies extends MoviesEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchTopRatedMovies extends MoviesEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchUpcomingMovies extends MoviesEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchNowPlayingMovies extends MoviesEvent {
   @override
   List<Object?> get props => [];
 }

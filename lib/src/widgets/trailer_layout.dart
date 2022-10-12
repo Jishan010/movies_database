@@ -9,7 +9,7 @@ class TrailerLayout extends StatelessWidget {
 
   const TrailerLayout({Key? key, required this.data}) : super(key: key);
 
-  YoutubePlayerController getYouTubePlayerController(String? videoIdKey) {
+  YoutubePlayerController _getYouTubePlayerController(String? videoIdKey) {
     return YoutubePlayerController(
       initialVideoId: videoIdKey!,
       flags: const YoutubePlayerFlags(
@@ -37,14 +37,14 @@ class TrailerLayout extends StatelessWidget {
                           handleColor: Colors.amberAccent,
                         ),
                         controller:
-                            getYouTubePlayerController(data?.results[0].key),
+                        _getYouTubePlayerController(data?.results[0].key),
                         showVideoProgressIndicator: true,
                         thumbnail: Image.network(
                           "https://img.youtube.com/vi/${data?.results[0].key}/0.jpg",
                           fit: BoxFit.cover,
                         ),
                         onReady: () {
-                          getYouTubePlayerController(data?.results[0].key)
+                          _getYouTubePlayerController(data?.results[0].key)
                               .addListener(() {
                             SystemChrome.setPreferredOrientations([
                               DeviceOrientation.portraitUp,

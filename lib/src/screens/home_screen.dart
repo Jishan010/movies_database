@@ -17,8 +17,11 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  late final MoviesListBloc moviesListBloc;
+
+  late TabController _tabController;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -28,21 +31,43 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(() {_tabControllerListener();});
+    moviesListBloc = MoviesListBloc(repository: getIt<RemoteRepository>())
+      ..add(FetchPopulorMovies());
     super.initState();
+  }
+
+  // add listener to the tab controller
+  _tabControllerListener() {
+    if (_tabController.indexIsChanging) {
+      switch (_tabController.index) {
+        case 0:
+          moviesListBloc.add(FetchPopulorMovies());
+          break;
+        case 1:
+          moviesListBloc.add(FetchTopRatedMovies());
+          break;
+        case 2:
+          moviesListBloc.add(FetchUpcomingMovies());
+          break;
+        case 3:
+          moviesListBloc.add(FetchNowPlayingMovies());
+          break;
+      }
+    }
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _tabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MoviesListBloc(repository: getIt<RemoteRepository>())
-        ..add(FetchMovies()),
+      create: (context) => moviesListBloc,
       child: DefaultTabController(
         length: 4,
         initialIndex: 0,
@@ -80,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             floating: true,
                             pinned: true,
                             bottom: TabBar(
+                              controller: _tabController,
                               indicatorSize: TabBarIndicatorSize.tab,
                               indicator: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
