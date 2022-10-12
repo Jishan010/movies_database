@@ -48,4 +48,10 @@ class FavMovieBloc extends Bloc<FavEvent, FavState> {
     });
 
   }
+
+  //function to dispose bloc
+  void dispose() {
+    close();
+  }
+
 }

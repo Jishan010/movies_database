@@ -71,19 +71,28 @@ class MovieDetailState extends State<MovieDetail> {
     this.backdropPath,
   });
 
+  late MovieDetailBloc movieDetailBloc;
+  late FavMovieBloc favMovieBloc;
+
+  @override
+  void initState() {
+    movieDetailBloc = MovieDetailBloc(repository: getIt<RemoteRepository>())
+      ..add(FetchMovieTrailerById(id: movieId));
+    favMovieBloc = FavMovieBloc(
+      localRepository: getIt<LocalRepository>(),
+    )..add(CheckIfMovieIsFavEvent(movieId: movieId));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<MovieDetailBloc>(
-          create: (context) =>
-              MovieDetailBloc(repository: getIt<RemoteRepository>())
-                ..add(FetchMovieTrailerById(id: movieId)),
+          create: (context) => movieDetailBloc,
         ),
         BlocProvider<FavMovieBloc>(
-          create: (context) => FavMovieBloc(
-            localRepository: getIt<LocalRepository>(),
-          )..add(CheckIfMovieIsFavEvent(movieId: movieId)),
+          create: (context) => favMovieBloc,
         ),
       ],
       child: Scaffold(
@@ -188,9 +197,7 @@ class MovieDetailState extends State<MovieDetail> {
                           margin: const EdgeInsets.only(left: 1.0, right: 1.0),
                         ),
                         Text(
-                          voteAverage != null
-                              ? voteAverage.toString()
-                              : "0.0",
+                          voteAverage != null ? voteAverage.toString() : "0.0",
                           style: const TextStyle(
                             fontSize: 18.0,
                           ),

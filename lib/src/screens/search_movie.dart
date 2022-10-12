@@ -15,8 +15,21 @@ class SearchMovie extends StatefulWidget {
 }
 
 class _SearchMovieState extends State<SearchMovie> {
-  MoviesListBloc bloc = MoviesListBloc(repository: getIt<RemoteRepository>());
-  final TextEditingController _controller = TextEditingController();
+  late final MoviesListBloc bloc;
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    bloc = MoviesListBloc(repository: getIt<RemoteRepository>());
+    _controller = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +84,9 @@ class _SearchMovieState extends State<SearchMovie> {
                       );
                     } else if (state is MoviesLoadingState) {
                       return Center(
-                        child: _controller.value.text.isEmpty ? const SizedBox() : const  CircularProgressIndicator(),
+                        child: _controller.value.text.isEmpty
+                            ? const SizedBox()
+                            : const CircularProgressIndicator(),
                       );
                     } else if (state is MoviesErrorState) {
                       return const Center(

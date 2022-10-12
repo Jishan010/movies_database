@@ -17,9 +17,22 @@ class FavMovies extends StatefulWidget {
 }
 
 class _FavMoviesState extends State<FavMovies> {
-  FavMovieBloc bloc = FavMovieBloc(localRepository: getIt<LocalRepository>())
-    ..add(FetchFavMoviesEvent());
-  final TextEditingController _controller = TextEditingController();
+  late FavMovieBloc bloc;
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+     bloc = FavMovieBloc(localRepository: getIt<LocalRepository>())
+      ..add(FetchFavMoviesEvent());
+   _controller = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
