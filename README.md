@@ -1,6 +1,6 @@
 # movies_database
 
-### Flutter Sample Project to Test Flutter for Simple Moview Application
+### Flutter Sample Project to Test Flutter for Simple Movie Database Application
 ### This project includes features like:
 - [x] List of Movies
 - [x] Movie Details
@@ -12,9 +12,7 @@
 
 
 ### Screenshots
-![Screenshot](![](screenshots/fav_movies.png)   
-![Screenshot](![](screenshots/search_movie.png)
-![Screenshot](![](screenshots/fav_movies.png)
+![Home Screen](![](screenshots/home_screen.png)![Search Movie](![](screenshots/search_movie.png)![Fav Movies](![](screenshots/fav_movies.png)
 
 
 ### Build with
