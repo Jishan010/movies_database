@@ -23,6 +23,6 @@
 - Internet Connection Checker: for checking internet connection
 
 ### Screenshots
-![Home Screen](![](screenshots/search_movie.png)
+![Home Screen](![](screenshots/home_screen.png)
 ![Search Movies](![](screenshots/search_movie.png)
 ![Fav Movies](![](screenshots/fav_movies.png)
