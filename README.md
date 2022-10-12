@@ -12,8 +12,7 @@
 
 
 ### Screenshots
-![Home Screen](![alt text](https://github.com/Jishan010/movies_database/blob/master/screenshots/home_screen.png?raw=true)![Search Movie](![](screenshots/search_movie.png)![Fav Movies](![](screenshots/fav_movies.png)
-<img src="(https://github.com/Jishan010/movies_database/blob/master/screenshots/home_screen.png?raw=true" width="128"/>
+![](![alt text](https://github.com/Jishan010/movies_database/blob/master/screenshots/home_screen.png?raw=true "Home Screen")![](![](screenshots/search_movie.png "Search Movie")![Fav Movies](![](screenshots/fav_movies.png "Fav Movies")
 
 ### Build with
 - Architecure : Bloc with Clean architecture
