@@ -12,7 +12,7 @@
 
 
 ### Screenshots
-![Home Screen](![](screenshots/home_screen.png)![Search Movie](![](screenshots/search_movie.png)![Fav Movies](![](screenshots/fav_movies.png)
+![Home Screen](![](https://github.com/Jishan010/movies_database/blob/master/screenshots/fav_movies.png=400)![Search Movie](![](screenshots/search_movie.png)![Fav Movies](![](screenshots/fav_movies.png)
 
 
 ### Build with
