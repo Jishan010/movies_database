@@ -24,6 +24,6 @@
 
 ### Screenshots
 ![Home Screen](![](screenshots/home_screen.png)
-![Movie Details](![](screenshots/movie_details.png)
+![Movie Details](![](screenshots/movie_detail_screen.png)
 ![Search Movies](![](screenshots/search_movie.png)
 ![Fav Movies](![](screenshots/fav_movies.png)
