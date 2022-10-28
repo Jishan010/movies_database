@@ -5,5 +5,5 @@ import 'src/app.dart';
 Future<void> main() async {
   getItInit();
   WidgetsFlutterBinding.ensureInitialized();
-  getIt.allReady().then((value) => runApp(const App()));
+  getIt.allReady().then((value) => runApp(const MyApp()));
 }

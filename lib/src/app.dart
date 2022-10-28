@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/screens/home_screen.dart';
 
-class App extends StatelessWidget {
+class MyApp extends StatelessWidget {
 
-  const App({
+  const MyApp({
     Key? key,
   }) : super(key: key);
 
