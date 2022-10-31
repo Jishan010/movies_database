@@ -103,6 +103,7 @@ class MovieDetailState extends State<MovieDetail> {
           child: NestedScrollView(
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
+
               return <Widget>[
                 SliverAppBar(
                   leading: IconButton(
