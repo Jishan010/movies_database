@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_database/src/di/locator.dart';
@@ -17,7 +18,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   late final MoviesListBloc moviesListBloc;
 
@@ -32,7 +34,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
-    _tabController.addListener(() {_tabControllerListener();});
+    _tabController.addListener(() {
+      _tabControllerListener();
+    });
     moviesListBloc = MoviesListBloc(repository: getIt<RemoteRepository>())
       ..add(FetchPopulorMovies());
     super.initState();
@@ -90,11 +94,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               IconButton(
                                   iconSize: 30,
                                   onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SearchMovie()));
+                                    Beamer.of(context).beamToNamed('/search');
                                   },
                                   icon: const Icon(Icons.search))
                             ],

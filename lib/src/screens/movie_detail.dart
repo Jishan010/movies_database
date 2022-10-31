@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movies_database/src/blocs/add_to_fav/fav_state.dart';
@@ -107,7 +108,7 @@ class MovieDetailState extends State<MovieDetail> {
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Beamer.of(context).beamBack();
                     },
                   ),
                   expandedHeight: 200.0,

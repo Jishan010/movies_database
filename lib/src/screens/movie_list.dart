@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import '../models/item_model.dart';
 import '../widgets/movie_card.dart';
@@ -17,21 +18,12 @@ class MovieListScreen extends StatelessWidget {
         //add tap event to the movie poster
         return GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MovieDetail(
-                  title: listOfmovies.results[index].title,
-                  posterUrl: listOfmovies.results[index].posterPath,
-                  description: listOfmovies.results[index].overview,
-                  releaseDate: listOfmovies.results[index].releaseDate,
-                  voteAverage:
-                      listOfmovies.results[index].voteAverage,
-                  movieId: listOfmovies.results[index].id,
-                  backdropPath: listOfmovies.results[index].backdropPath,
-                  originalLanguage:
-                      listOfmovies.results[index].originalLanguage,
-                ),
+            Beamer.of(context).beamToNamed(
+              '/movieDetail',
+              data: ItemModel(
+                results: [
+                  listOfmovies.results[index],
+                ],
               ),
             );
           },
