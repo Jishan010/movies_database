@@ -16,6 +16,7 @@
 
 - Architecure : Bloc with Clean architecture
 - Flutter Bloc: For StateManagement
+- Beamer: For Navigation
 - Floor: for Database
 - Chopper: for Network
 - get_it(Service Locator): for DI
@@ -23,6 +24,7 @@
 - Internet Connection Checker: for checking internet connection
 
 ### Screenshots
+
 ![Home Screen](![](screenshots/home_screen.png)
 ![Movie Details](![](screenshots/movie_detail_screen.png)
 ![Search Movies](![](screenshots/search_movie.png)
