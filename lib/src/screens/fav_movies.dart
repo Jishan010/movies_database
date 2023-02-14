@@ -22,8 +22,7 @@ class _FavMoviesState extends State<FavMovies> {
 
   @override
   void initState() {
-    bloc = FavMovieBloc(localRepository: getIt<LocalRepository>())
-      ..add(FetchFavMoviesEvent());
+    bloc = FavMovieBloc(localRepository: getIt<LocalRepository>())..add(FetchFavMoviesEvent());
     _controller = TextEditingController();
     super.initState();
   }
