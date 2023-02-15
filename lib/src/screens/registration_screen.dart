@@ -1,5 +1,6 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -7,6 +8,12 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController mobileController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+
+  Future<void> _saveCredentials(String email, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+    await prefs.setString('password', password);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +83,11 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 32),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     // Perform registration logic here
+                    String email = emailController.text;
+                    String password = passwordController.text;
+                    await _saveCredentials(email, password);
                     Beamer.of(context).beamToNamed(
                       '/home',
                     );

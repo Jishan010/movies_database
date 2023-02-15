@@ -41,6 +41,7 @@ dependencies:
   internet_connection_checker: ^0.0.1+4
   get_it:
   beamer: ^1.5.3
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_test:
