@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movies_database/src/models/item_model.dart';
 import 'package:movies_database/src/screens/home_screen.dart';
 import 'package:movies_database/src/screens/movie_detail.dart';
+import 'package:movies_database/src/screens/registration_screen.dart';
 import 'package:movies_database/src/screens/search_movie.dart';
 
 class MyApp extends StatelessWidget {
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
     ),
     locationBuilder: RoutesLocationBuilder(
       routes: {
-        '/': (context, state, data) => const Scaffold(body: HomeScreen()),
+        '/': (context, state, data) => Scaffold(body: RegisterScreen()),
+        '/home': (context, state, data) => const HomeScreen(),
         '/search': (context, state, data) => const SearchMovie(),
         '/movieDetail': (context, state, data) {
           ItemModel itemModel = data as ItemModel;
