@@ -98,14 +98,16 @@ class RegisterScreen extends StatelessWidget {
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    height: 45,
+                    height: 50,
                     child: Text("REGISTER"),
                   ),
                 ),
                 SizedBox(height: 16),
                 TextButton(
                     onPressed: () {
-                      //todo Navigate to login screen
+                      Beamer.of(context).beamToNamed(
+                        '/login',
+                      );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
